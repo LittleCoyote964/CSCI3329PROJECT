@@ -4,6 +4,30 @@ import tkinter.font as tkFont
 #will have to add action from when the customer signs in
 def handle_login():
     print("Test, this is the login button.")
+    id = userEntry.get()
+    pssw = passEntry.get()
+    f = open("user.txt", "r")
+    idlist = f.readlines()#list
+
+
+    idexist = False
+    for b in range(len(idlist)):
+        if idlist[b] == id:
+            idexist = True
+    f.close()
+    f = open("pass.txt", "r")
+    psswlist = f.readlines()
+    f.close()
+    psswexist = False
+    for b in range(len(psswlist)):
+        if psswlist[b] == pssw:
+            psswexist = True 
+    if idexist and psswexist:
+            w.destroy()
+            #15.1
+    else:
+        print("ID or Password is incorrect!")
+    
 
 def handle_forgot():
     print("Test, this is for forgot password.")
