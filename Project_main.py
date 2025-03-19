@@ -1,10 +1,12 @@
 import tkinter as tk
 import tkinter.font as tkFont
+import Project_menu
 
 #will have to add action from when the customer signs in
 
 def handle_login():
     print("Test, this is the login button.")
+    Project_menu.open_menu(w) # this is to connect the use menu
     id = userEntry.get()
     pssw = passEntry.get()
     f = open("user.txt", "r")

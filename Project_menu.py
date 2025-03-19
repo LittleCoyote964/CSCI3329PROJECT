@@ -17,8 +17,8 @@ def handle_logout():
     print("Testing, this is for logging the user out")
 
 #continuing from the root window. 
-def open_menu(root):
-    menu = tk.TopLevel(root)
+def open_menu(w):
+    menu = tk.Toplevel(w)
     menu.title("User menu")
     menu.configure(bg = "Maroon")
     menu.geometry("600x600")
@@ -26,47 +26,52 @@ def open_menu(root):
     #fontStyle = tkFont.Font(family = "Times New Roman", size=18)
 
     #this is the header for the user menu window
-    menuHeader = tk.Label(text="User Menu",
-                          font = ("Times New Roman", 20) , 
+    menuHeader = tk.Label(menu,
+                          text="User Menu",
+                          font = ("Times New Roman", 30) , 
                           bg = "maroon",
                           fg = "white")
-    menuHeader.place(x = 175, y = 50)
+    menuHeader.place(x = 200, y = 50)
 
 
 #this button will be used to get the account details such as the balance
-    detailOpt = tk.Button(text="Check Balance", 
+    detailOpt = tk.Button(menu,
+                      text="Check Balance", 
                       width =23, 
                       height = 2, 
                       bg="gray", 
                       fg = "black", 
                       command=handle_accountdetails) # will have to edit this to where we are able to display the detail on the GUI
-    detailOpt.place(x = 200, y = 100)
+    detailOpt.place(x = 200, y = 150)
 
 
 #these buttons will be used to withdraw and deposit fund
-    withdrawal = tk.Button(text="Withdraw",
+    withdrawal = tk.Button(menu,
+                           text="Withdraw",
                            width = 23,
                            height = 2,
                            bg = "gray",
                            fg = "black",
                            command=handle_withdrawal)
-    withdrawal.place(x=200, y = 150)
+    withdrawal.place(x=200, y = 200)
 
-    deposit = tk.Button(text = "Deposit",
+    deposit = tk.Button(menu,
+                        text = "Deposit",
                         width = 23,
                         height = 2,
                         bg = "gray",
                         fg = "black",
                         command=handle_deposit)
-    deposit.place(x=200, y = 200)
+    deposit.place(x=200, y = 250)
 
 #this button will be used to log out the user from their account
-    logOut = tk.Button(text="Log out user",
+    logOut = tk.Button(menu,
+                       text="Log out user",
                        width = 23,
                        height = 2,
                        bg = "gray",
                        fg = "black",
                        command = handle_logout)
-    logOut.place(x=200, y =250)
+    logOut.place(x=200, y =300)
 
 
