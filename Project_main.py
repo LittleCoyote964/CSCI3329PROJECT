@@ -20,8 +20,8 @@ w.geometry("600x600")
 fontStyle = tkFont.Font(family="Times New Roman", size=20)
 
 #header label
-headerLabel = tk.Label(text="(Bank Name)", #change name whenever
-                       font=("Times New Romman", 30), 
+headerLabel = tk.Label(text="(Bank Name)", #change name whenever, but will have to edit the "X" placement for it depending on the lenght. 
+                       font=("Times New Roman", 30), 
                        bg="maroon",
                        fg="white")
 headerLabel.place(x=175, y = 50)
