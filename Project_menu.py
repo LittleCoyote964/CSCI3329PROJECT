@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.font as tkFont
-
+import Project_main
 #will work on menu for action user picks
 #menu for whenever the user is able to log in, will be imported to the Project_main.py
 
@@ -13,12 +13,16 @@ def handle_withdrawal():
 def handle_deposit():
     print("Testing, this is for depositing money")
 
-def handle_logout():
-    print("Testing, this is for logging the user out")
+
 
 #continuing from the root window. 
-def open_menu(w):
-    menu = tk.Toplevel(w)
+def open_menu():
+    def handle_logout():
+        print("Testing, this is for logging the user out")
+        menu.destroy()
+        Project_main.main()
+
+    menu = tk.Tk()
     menu.title("User menu")
     menu.configure(bg = "Maroon")
     menu.geometry("600x600")
@@ -73,5 +77,7 @@ def open_menu(w):
                        fg = "black",
                        command = handle_logout)
     logOut.place(x=200, y =300)
+
+    
 
 
