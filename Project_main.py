@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.font as tkFont
 import Project_menu
 from forgot_password import forgot_password_window
+from new_user import new_user_window
 
 #will have to add action from when the customer signs in
 
@@ -114,6 +115,6 @@ newButton = tk.Button(text="Create new user",
                       height = 2,
                       bg = "gray",
                       fg = "black",
-                      command = handle_newuser)
+                      command = lambda: new_user_window(w))
 newButton.place(x = 200,y=450)
 w.mainloop()
