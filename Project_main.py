@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.font as tkFont
 import Project_menu
+from forgot_password import forgot_password_window
 
 #will have to add action from when the customer signs in
 
@@ -104,7 +105,7 @@ forpassButt = tk.Button(text="Forgot Password?",
                         height=2, 
                         bg="gray",
                         fg="black",
-                        command = handle_forgot)
+                        command = lambda: forgot_password_window(w))
 forpassButt.place(x=200, y=400)
 
 #create new user
