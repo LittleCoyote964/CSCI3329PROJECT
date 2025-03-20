@@ -4,8 +4,20 @@ import Project_main
 #will work on menu for action user picks
 #menu for whenever the user is able to log in, will be imported to the Project_main.py
 
-def handle_accountdetails():
-    print("Testing, will have to add account detail")
+def handle_accountdetails(user_id, balance):
+    account_window = tk.Toplevel()
+    account_window.title("Account Details")
+    account_window.geometry("400x300")
+    account_window.configure(bg="gray")
+
+    tk.Label(account_window, text="Account Details", font=("Times New Roman", 20), bg="gray", fg="white").pack(pady=10)
+
+    tk.Label(account_window, text=f"Username: {user_id}", font=("Times New Roman", 14), bg="gray", fg="white").pack(pady=5)
+
+    tk.Label(account_window, text=f"Balance: {balance}", font=("Times New Roman", 14), bg="gray", fg="white").pack(pady=5)
+
+    close_button = tk.Button(account_window, text="Close", command=account_window.destroy(), bg="white", fg="black", width=15)
+    close_button.pack(pady=20)
 
 def handle_withdrawal():
     print("Testing, this button is to withdraw money")
@@ -45,7 +57,7 @@ def open_menu():
                       height = 2, 
                       bg="gray", 
                       fg = "black", 
-                      command=handle_accountdetails) # will have to edit this to where we are able to display the detail on the GUI
+                      command=lambda: handle_accountdetails(w)) # will have to edit this to where we are able to display the detail on the GUI
     detailOpt.place(x = 200, y = 150)
 
 

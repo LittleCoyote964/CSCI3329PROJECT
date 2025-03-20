@@ -17,19 +17,30 @@ def new_user_window(parent_window):
 
     pass_entry = tk.Entry(new_user, width=30, show='*')
     pass_entry.pack(pady=5)
+
     def submit_user():
-        username = user_entry.get().strip()
+        username = user_entry.get().strip() 
         password = pass_entry.get().strip()
         
         if not username or not password:
             print("Please enter a valid username and password.")
             return
         
+        with open("user.txt", "r") as user_file:
+            existing_users = [line.strip() for line in user_file.readlines()]
+        
+        if username in existing_users:
+            print(f"Username '{username}' already exists. Please choose a different username.")
+            return
+        
         with open("user.txt", "a") as user_file:
-            user_file.write(username)
+            user_file.write(username + "\n")
         
         with open("pass.txt", "a") as pass_file:
-            pass_file.write(password)
+            pass_file.write(password + "\n")
+
+        with open("user_balance.txt", "a") as balance_file:
+            balance_file.write(f"{username}, 0.00\n")
 
         print(f"New user '{username}' created successfully!")
         new_user.destroy()

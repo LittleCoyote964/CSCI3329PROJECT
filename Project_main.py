@@ -14,7 +14,7 @@ def main():
         idlist = f.readlines()#list
         idexist = False
         for b in range(len(idlist)):
-            if idlist[b] == id:
+            if idlist[b] == str(f"{id}\n"):
                 idexist = True 
         f.close()
         f = open("pass.txt", "r")
@@ -22,7 +22,7 @@ def main():
         f.close()
         psswexist = False
         for b in range(len(psswlist)):
-            if psswlist[b] == pssw:
+            if psswlist[b] == str(f"{pssw}\n"):
                 psswexist = True 
         if idexist and psswexist:
                 w.destroy()
