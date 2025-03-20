@@ -18,7 +18,7 @@ def new_user_window(parent_window):
     pass_entry = tk.Entry(new_user, width=30, show='*')
     pass_entry.pack(pady=5)
     def submit_user():
-        username = user_entry.get().strip()
+        username = user_entry.get().strip() 
         password = pass_entry.get().strip()
         
         if not username or not password:
@@ -26,10 +26,10 @@ def new_user_window(parent_window):
             return
         
         with open("user.txt", "a") as user_file:
-            user_file.write(username)
+            user_file.write(username + "\n")
         
         with open("pass.txt", "a") as pass_file:
-            pass_file.write(password)
+            pass_file.write(password + "\n")
 
         print(f"New user '{username}' created successfully!")
         new_user.destroy()
