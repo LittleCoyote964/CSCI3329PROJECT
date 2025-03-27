@@ -74,7 +74,7 @@ class BankApp:
                                 height=2, 
                                 bg="gray",
                                 fg="black",
-                                command = lambda: self.forgot_password_window(self))
+                                command = lambda: forgot_password_window(self.master))
         self.forpassButt.place(x=200, y=400)
 
         #create new user
@@ -83,7 +83,7 @@ class BankApp:
                             height = 2,
                             bg = "gray",
                             fg = "black",
-                            command = lambda: self.new_user_window(self))
+                            command = lambda: new_user_window(self.master))
         self.newButton.place(x = 200,y=450)
 
     def handle_login(self):
