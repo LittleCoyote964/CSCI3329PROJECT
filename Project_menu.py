@@ -19,11 +19,45 @@ def handle_accountdetails(user_id, balance):
     close_button = tk.Button(account_window, text="Close", command=account_window.destroy, bg="white", fg="black", width=15)
     close_button.pack(pady=20)
 
-def handle_withdrawal():
-    print("Testing, this button is to withdraw money")
+def handle_withdrawal(user_id, balance):
+    def process_withdrawal():
+        try:
+            amount = float(amount_entry.get())
+            if amount > balance:
+                result_label.config(text="Insufficient funds.", fg="red")
+            elif amount <= 0:
+                result_label.config(text="Enter a valid amount.", fg="red")
+            else:
+                new_balance = balance - amount
+                result_label.config(text=f"Withdrawal successful. New balance: ${new_balance:.2f}", fg="green")
+                # You'd also update the user's balance in a file here if needed
+        except ValueError:
+            result_label.config(text="Please enter a number.", fg="red")
+
+    account_window = tk.Toplevel()
+    account_window.title("Withdrawal Request")
+    account_window.geometry("400x300")
+    account_window.configure(bg="gray")
+
+    tk.Label(account_window, text="Withdrawal Request", font=("Times New Roman", 20), bg="gray", fg="white").pack(pady=10)
+    tk.Label(account_window, text=f"Username: {user_id}", font=("Times New Roman", 14), bg="gray", fg="white").pack(pady=5)
+    tk.Label(account_window, text=f"Balance: ${balance:.2f}", font=("Times New Roman", 14), bg="gray", fg="white").pack(pady=5)
+
+    tk.Label(account_window, text="Amount to withdraw:", font=("Times New Roman", 14), bg="gray", fg="white").pack(pady=5)
+    amount_entry = tk.Entry(account_window, font=("Times New Roman", 14))
+    amount_entry.pack(pady=5)
+
+    tk.Button(account_window, text="Withdraw", command=process_withdrawal, bg="white", fg="black", width=15).pack(pady=10)
+
+    result_label = tk.Label(account_window, font=("Times New Roman", 12), bg="gray")
+    result_label.pack()
+
 
 def handle_deposit():
     print("Testing, this is for depositing money")
+
+
+
 
 
 
@@ -68,7 +102,7 @@ def open_menu(w, user_id, balance):
                            height = 2,
                            bg = "gray",
                            fg = "black",
-                           command=handle_withdrawal)
+                           command=lambda: handle_withdrawal(user_id, balance))
     withdrawal.place(x=200, y = 200)
 
     deposit = tk.Button(menu,
