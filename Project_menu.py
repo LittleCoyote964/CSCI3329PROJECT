@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.font as tkFont
-import Project_main
+import Project_BankApp
 #will work on menu for action user picks
 #menu for whenever the user is able to log in, will be imported to the Project_main.py
 
@@ -32,7 +32,7 @@ def open_menu(w, user_id, balance):
     def handle_logout():
         print("Testing, this is for logging the user out")
         menu.destroy()
-        Project_main.show_login()
+        Project_BankApp.show_login()
 
     menu = tk.Toplevel(w)
     menu.title("User menu")
