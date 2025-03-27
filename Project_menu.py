@@ -16,7 +16,7 @@ def handle_accountdetails(user_id, balance):
 
     tk.Label(account_window, text=f"Balance: {balance}", font=("Times New Roman", 14), bg="gray", fg="white").pack(pady=5)
 
-    close_button = tk.Button(account_window, text="Close", command=account_window.destroy(), bg="white", fg="black", width=15)
+    close_button = tk.Button(account_window, text="Close", command=account_window.destroy, bg="white", fg="black", width=15)
     close_button.pack(pady=20)
 
 def handle_withdrawal():
@@ -28,13 +28,13 @@ def handle_deposit():
 
 
 #continuing from the root window. 
-def open_menu():
+def open_menu(w, user_id, balance):
     def handle_logout():
         print("Testing, this is for logging the user out")
         menu.destroy()
-        Project_main.main()
+        Project_main.show_login()
 
-    menu = tk.Tk()
+    menu = tk.Toplevel(w)
     menu.title("User menu")
     menu.configure(bg = "Maroon")
     menu.geometry("600x600")
@@ -57,7 +57,7 @@ def open_menu():
                       height = 2, 
                       bg="gray", 
                       fg = "black", 
-                      command=lambda: handle_accountdetails(w)) # will have to edit this to where we are able to display the detail on the GUI
+                      command=lambda: handle_accountdetails(user_id, balance)) # will have to edit this to where we are able to display the detail on the GUI
     detailOpt.place(x = 200, y = 150)
 
 

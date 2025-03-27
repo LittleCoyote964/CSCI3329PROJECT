@@ -4,17 +4,22 @@ import Project_menu
 from forgot_password import forgot_password_window
 from new_user import new_user_window
 
+def show_login():
+    # This function shows the login window again.
+    w.deiconify()
+
+
 #will have to add action from when the customer signs in
 def main(): 
     def handle_login():
         print("Test, this is the login button.")     
-        id = userEntry.get()
+        user_id = userEntry.get()
         pssw = passEntry.get()
         f = open("user.txt", "r")
         idlist = f.readlines()#list
         idexist = False
         for b in range(len(idlist)):
-            if idlist[b] == str(f"{id}\n"):
+            if idlist[b] == str(f"{user_id}\n"):
                 idexist = True 
         f.close()
         f = open("pass.txt", "r")
@@ -25,8 +30,8 @@ def main():
             if psswlist[b] == str(f"{pssw}\n"):
                 psswexist = True 
         if idexist and psswexist:
-                w.destroy()
-                Project_menu.open_menu() # this is to connect the use menu
+                w.withdraw()
+                Project_menu.open_menu(w, user_id, balance= 0.00) # this is to connect the use menu
 
         else:
             print("ID or Password is incorrect!") # need to make this part of the GUI
@@ -44,6 +49,7 @@ def main():
     def handle_newuser():
         print("Test, this is to create a new user.")
 
+    global w
     w = tk.Tk()
     w.title("Bank Account Login")
     w.configure(bg="Maroon")
@@ -66,7 +72,7 @@ def main():
 
     #header label
     headerLabel = tk.Label(text="Bank of Project", #change name whenever
-                        font=("Times New Romman", 30), 
+                        font=("Times New Roman", 30), 
                         bg="maroon",
                         fg="white")
     headerLabel.place(x=175, y = 50)
@@ -78,6 +84,7 @@ def main():
                         fg="white")
     userLabel.place(x = 100, y = 150)
 
+    global userEntry
     #user entry
     userEntry = tk.Entry(fg="maroon", bg="white",width=10, font=("Times New Roman", 20))
     userEntry.place(x=340,y=150)
@@ -89,6 +96,7 @@ def main():
                         fg="white")
     passLabel.place(x=100,y=250)
 
+    global passEntry
     #user entry for their password
     passEntry = tk.Entry(fg="maroon", 
                         width=10, 
