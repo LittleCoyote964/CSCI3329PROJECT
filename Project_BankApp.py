@@ -4,12 +4,12 @@ from forgot_password import forgot_password_window
 from new_user import new_user_window
 
 class BankApp:
-    def __init__(self, master): #using master to have the "parent window"
+    def __init__(self, master): #using master to have the "parent window
         self.master = master # to keep the main window
         self.master.title("Bank account Login")
         self.master.configure(bg = "maroon")
 
-        #window dimensions
+        # window dimensions
         self.win_width = 600
         self.win_height = 600
         self.master.geometry(f"{self.win_width}x{self.win_height}")
@@ -21,7 +21,7 @@ class BankApp:
 
         self.fontStyle = tkFont.Font(family="Times New Roman", size=20)
 
-        self.setup_login() # to start the set up for the UI
+        self.setup_login() # to start the set up for the ui
 
     def setup_login(self):
         #for header label**
@@ -88,40 +88,48 @@ class BankApp:
 
     def handle_login(self):
         print("Testing login button.")
-        print("Test, this is the login button.") 
+        user_id = self.userEntry.get().strip()
+        pssw = self.passEntry.get().strip()
 
-        user_id = self.userEntry.get()
-        pssw = self.passEntry.get()
+        # Check credentials
+        with open("user.txt", "r") as f:
+            idlist = [line.strip() for line in f.readlines()]
+        idexist = user_id in idlist
 
-        f = open("user.txt", "r")
-        idlist = f.readlines()#list
-        idexist = False
-        for b in range(len(idlist)):
-            if idlist[b] == str(f"{user_id}\n"):
-                idexist = True 
-        f.close()
-
-        f = open("pass.txt", "r")
-        psswlist = f.readlines()
-        f.close()
-        psswexist = False
-
-        for b in range(len(psswlist)):
-            if psswlist[b] == str(f"{pssw}\n"):
-                psswexist = True 
+        with open("pass.txt", "r") as f:
+            psswlist = [line.strip() for line in f.readlines()]
+        psswexist = pssw in psswlist
 
         if idexist and psswexist:
-                self.master.withdraw()
-                import Project_menu
-                Project_menu.open_menu(self.master, user_id, balance= 0.00) # this is to connect the use menu
-        else:
-            print("ID or Password is incorrect!") # need to make this part of the GUI
-            fontS = tkFont.Font(family="Times New Roman", size=10)
+            # get current balance handles missing or bad entries
+            balance = 0.00
+            try:
+                with open("user_balance.txt", "r") as f:
+                    for line in f:
+                        parts = line.strip().split(", ")
+                        if len(parts) == 2 and parts[0] == user_id:
+                            try:
+                                balance = float(parts[1])
+                                break
+                            except ValueError:
+                                balance = 0.00
+                                break
+            except FileNotFoundError:
+                # if balance file doesn't exist, create it with default balance
+                with open("user_balance.txt", "w") as f:
+                    f.write(f"{user_id}, 0.00\n")
+                balance = 0.00
 
-            self.incorrectLabel = tk.Label(text="Password or Username is incorrect. Please try again.", 
-                        font=fontS,
-                        bg="maroon",
-                        fg="red")
+            self.master.withdraw()
+            import Project_menu
+            Project_menu.open_menu(self.master, user_id, balance)
+        else:
+            print("ID or Password is incorrect!")
+            fontS = tkFont.Font(family="Times New Roman", size=10)
+            self.incorrectLabel = tk.Label(text="Password or Username is incorrect. Please try again.",
+                                           font=fontS,
+                                           bg="maroon",
+                                           fg="red")
             self.incorrectLabel.pack(pady=290)
 
     def show_login(self):
