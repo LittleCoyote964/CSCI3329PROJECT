@@ -122,7 +122,7 @@ class BankApp:
 
             self.master.withdraw()
             import Project_menu
-            Project_menu.open_menu(self.master, user_id, balance)
+            Project_menu.open_menu(self.master, user_id, balance, show_login_callback=self.show_login)
         else:
             print("ID or Password is incorrect!")
             fontS = tkFont.Font(family="Times New Roman", size=10)

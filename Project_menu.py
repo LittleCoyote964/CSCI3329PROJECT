@@ -143,11 +143,11 @@ def handle_deposit(user_id, balance_var):
     close_button.pack(pady=20)
 
 #continuing from the root window. 
-def open_menu(w, user_id, balance):
+def open_menu(w, user_id, balance,show_login_callback):
     def handle_logout():
         print("Testing, this is for logging the user out")
         menu.destroy()
-        Project_BankApp.show_login()
+        show_login_callback()
 
     menu = tk.Toplevel(w)
     menu.title("User menu")
