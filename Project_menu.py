@@ -141,7 +141,9 @@ def handle_deposit(user_id, balance_var):
 
     close_button = tk.Button(deposit_window, text="Close", command=deposit_window.destroy, bg="white", fg="black", width=15)
     close_button.pack(pady=20)
-
+#will create a new button to transfer money from a their "checkings to a savings account"
+def handle_transfer(user_id, balance_var):
+    print('this is a test to make sure the transfer button works')
 #continuing from the root window. 
 def open_menu(w, user_id, balance,show_login_callback):
     def handle_logout():
@@ -204,6 +206,15 @@ def open_menu(w, user_id, balance,show_login_callback):
                         command=lambda: handle_deposit(user_id, balance_var))
     deposit.place(x=200, y=250)
 
+    transfer_to_savings = tk.Button(menu,
+                                    text= "Transfer to Savings",
+                                    width = 23,
+                                    height = 2,
+                                    bg = "gray",
+                                    fg = "black",
+                                    command=lambda: handle_transfer(user_id, balance_var))
+    transfer_to_savings.place(x = 200, y = 300)
+
     # logout button
     logOut = tk.Button(menu,
                        text="Log out user",
@@ -212,7 +223,7 @@ def open_menu(w, user_id, balance,show_login_callback):
                        bg="gray",
                        fg="black",
                        command=handle_logout)
-    logOut.place(x=200, y=300)
+    logOut.place(x=200, y=350)
 
     
 

@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.font as tkFont
 from forgot_password import forgot_password_window
 from new_user import new_user_window
-
+#FOR ROOT WINDOW
 class BankApp:
     def __init__(self, master): #using master to have the "parent window
         self.master = master # to keep the main window
