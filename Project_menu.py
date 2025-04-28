@@ -1,4 +1,3 @@
-# Project_menu.py
 import tkinter as tk
 from tkinter import messagebox
 from base_dialog import BaseDialog
