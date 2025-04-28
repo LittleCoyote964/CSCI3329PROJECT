@@ -9,37 +9,32 @@ class UserMenu(BaseDialog):
         self._user_id = user_id
         self._show_login_callback = show_login_callback
         self._balances = balances
-        # initialize StringVars before calling parent
+        # Initialize StringVars before calling parent
         self._balance_var_checking = tk.StringVar()
         self._balance_var_savings = tk.StringVar()
         super().__init__(parent, "User Menu", width=600, height=600, bg_color="maroon")
 
     def _setup_ui(self):
+
         # header
         tk.Label(self, text="User Menu",
                  font=("Times New Roman", 30), bg="maroon", fg="white").place(x=200, y=50)
 
-        # balance display
-        tk.Label(self, textvariable=self._balance_var_checking,
-                 font=("Times New Roman", 14), bg="maroon", fg="white").place(x=200, y=100)
-        tk.Label(self, textvariable=self._balance_var_savings,
-                 font=("Times New Roman", 14), bg="maroon", fg="white").place(x=200, y=130)
-
         # buttons
         tk.Button(self, text="Check Balance", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_account_details).place(x=200, y=150)
+                  command=self._handle_account_details).place(x=200, y=100)
 
         tk.Button(self, text="Withdraw", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_withdrawal).place(x=200, y=200)
+                  command=self._handle_withdrawal).place(x=200, y=150)
 
         tk.Button(self, text="Deposit", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_deposit).place(x=200, y=250)
+                  command=self._handle_deposit).place(x=200, y=200)
 
         tk.Button(self, text="Transfer to Savings", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_transfer).place(x=200, y=300)
+                  command=self._handle_transfer).place(x=200, y=250)
 
         tk.Button(self, text="Logout", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_logout).place(x=200, y=350)
+                  command=self._handle_logout).place(x=200, y=300)
 
     def _handle_account_details(self):
         messagebox.showinfo("Account Details",
@@ -93,8 +88,14 @@ class WithdrawalDialog(BaseDialog):
                 return
 
             user_manager = UserManager()
+            current_balance = user_manager.get_balances(self._user_id)[0]
+
+            if amount > current_balance:
+                self._result_label.config(text="Insufficient funds for this withdrawal!", fg="red")
+                return
+
             if not user_manager.update_balance(self._user_id, "checking", -amount):
-                self._result_label.config(text="Insufficient funds or user not found!", fg="red")
+                self._result_label.config(text="Transaction failed!", fg="red")
                 return
 
             new_balance = user_manager.get_balances(self._user_id)[0]
