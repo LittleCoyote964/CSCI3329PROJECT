@@ -163,6 +163,23 @@ def open_menu(w, user_id, balance,show_login_callback):
         print("Testing, this is for logging the user out")
         menu.destroy()
         show_login_callback()
+    
+    def refresh_balance_and_open(user_id):
+        checking = 0.00
+        savings = 0.00
+        try:
+            with open("user_balance.txt", "r") as f:
+                for line in f:
+                    parts = line.strip().split(", ")
+                    if len(parts) == 3 and parts[0] == user_id:
+                        checking = float(parts[1])
+                        savings = float(parts[2])
+                        break
+        except FileNotFoundError:
+            pass
+
+        handle_accountdetails(user_id, checking, savings)
+
 
     menu = tk.Toplevel(w)
     menu.title("User menu")
@@ -206,7 +223,7 @@ def open_menu(w, user_id, balance,show_login_callback):
                           height=2,
                           bg="gray",
                           fg="black",
-                          command=lambda: handle_accountdetails(user_id, balance[0], balance[1]))
+                          command=lambda: refresh_balance_and_open(user_id))
     detailOpt.place(x=200, y=150)
 
     # withdrawal button
