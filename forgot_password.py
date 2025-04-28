@@ -1,26 +1,31 @@
 import tkinter as tk
+from base_dialog import BaseDialog
 
-def forgot_password_window(parent_window):
-    forgot_window = tk.Toplevel(parent_window)
-    forgot_window.title("Forgot Password")
-    forgot_window.geometry("400x300")
-    forgot_window.configure(bg="gray")
 
-    tk.Label(forgot_window, text="Reset Password", font=("Times New Roman", 20), bg="gray", fg="white").pack(pady=10)
+class ForgotPasswordDialog(BaseDialog):
+    def __init__(self, parent):
+        super().__init__(parent, "Forgot Password", bg_color="gray")
 
-    tk.Label(forgot_window, text = "Enter your username: ", font=("Times New Roman", 14), bg="gray", fg="white").pack()
+    def _setup_ui(self):
+        tk.Label(self, text="Reset Password",
+                 font=("Times New Roman", 20), bg="gray", fg="white").pack(pady=10)
 
-    user_entry = tk.Entry(forgot_window, width=30)
-    user_entry.pack(pady=5)
+        tk.Label(self, text="Enter your username:",
+                 font=("Times New Roman", 14), bg="gray", fg="white").pack()
 
-    def reset_password():
-        username = user_entry.get().strip()
-        if username == "":
+        self._username_entry = tk.Entry(self, width=30, font=("Times New Roman", 12))
+        self._username_entry.pack(pady=5)
+
+        submit_button = tk.Button(self, text="Submit",
+                                  command=self._reset_password,
+                                  bg="white", fg="black", width=15)
+        submit_button.pack(pady=20)
+
+    def _reset_password(self):
+        username = self._username_entry.get().strip()
+        if not username:
             print("Please enter a valid username.")
             return
-        
-        print(f"Password reset sent to {username}")
-        forgot_window.destroy()
 
-    reset_button = tk.Button(forgot_window, text="Submit", command=reset_password, bg="white", fg="black", width=15)
-    reset_button.pack(pady=20)
+        print(f"Password reset sent to {username}")
+        self.destroy()
