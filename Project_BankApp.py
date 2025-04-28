@@ -102,36 +102,42 @@ class BankApp:
         psswexist = pssw in psswlist
 
         if idexist and psswexist:
-            # get current balance handles missing or bad entries
-            balance = 0.00
+            if hasattr(self, 'incorrectLabel') and self.incorrectLabel.winfo_exists():
+                self.incorrectLabel.destroy()
+
+            checking = 0.00
+            savings = 0.00
             try:
                 with open("user_balance.txt", "r") as f:
                     for line in f:
                         parts = line.strip().split(", ")
-                        if len(parts) == 2 and parts[0] == user_id:
+                        if len(parts) == 3 and parts[0] == user_id:
                             try:
-                                balance = float(parts[1])
+                                checking = float(parts[1])
+                                savings = float(parts[2])
                                 break
                             except ValueError:
-                                balance = 0.00
+                                checking = 0.00
+                                savings = 0.00
                                 break
             except FileNotFoundError:
-                # if balance file doesn't exist, create it with default balance
                 with open("user_balance.txt", "w") as f:
-                    f.write(f"{user_id}, 0.00\n")
-                balance = 0.00
+                    f.write(f"{user_id}, 0.00, 0.00\n")
+                checking = 0.00
+                savings = 0.00
 
             self.master.withdraw()
             import Project_menu
-            Project_menu.open_menu(self.master, user_id, balance, show_login_callback=self.show_login)
+            Project_menu.open_menu(self.master, user_id, (checking, savings), show_login_callback=self.show_login)
         else:
             print("ID or Password is incorrect!")
             fontS = tkFont.Font(family="Times New Roman", size=10)
             self.incorrectLabel = tk.Label(text="Password or Username is incorrect. Please try again.",
-                                           font=fontS,
-                                           bg="maroon",
-                                           fg="red")
+                                        font=fontS,
+                                        bg="maroon",
+                                        fg="red")
             self.incorrectLabel.pack(pady=290)
+
 
     def show_login(self):
         self.userEntry.delete(0, tk.END) 

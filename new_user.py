@@ -39,8 +39,11 @@ def new_user_window(parent_window):
         with open("pass.txt", "a") as pass_file:
             pass_file.write(password + "\n")
 
-        with open("user_balance.txt", "a") as balance_file:
-            balance_file.write(f"{username}, 0.00\n")
+        with open("user_balance.txt", "a+") as balance_file:
+            balance_file.seek(0, 2)  # move to the end of the file
+            if balance_file.tell() > 0:
+                balance_file.write("\n")
+            balance_file.write(f"{username}, 0.00, 0.00")
 
         print(f"New user '{username}' created successfully!")
         new_user.destroy()
