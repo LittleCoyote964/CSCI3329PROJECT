@@ -93,15 +93,19 @@ class BankApp:
         pssw = self.passEntry.get().strip()
 
         # Check credentials
-        with open("user.txt", "r") as f:
-            idlist = [line.strip() for line in f.readlines()]
-        idexist = user_id in idlist
+        login_success = False
+        try:
+            with open("user_password.txt", "r") as f:
+                for line in f:
+                    stored_user, stored_pass = line.strip().split(", ")
+                    if stored_user == user_id and stored_pass == pssw:
+                        login_success = True
+                        break
+        except FileNotFoundError:
+            print("No users found.")
+            login_success = False
 
-        with open("pass.txt", "r") as f:
-            psswlist = [line.strip() for line in f.readlines()]
-        psswexist = pssw in psswlist
-
-        if idexist and psswexist:
+        if login_success:
             if hasattr(self, 'incorrectLabel') and self.incorrectLabel.winfo_exists():
                 self.incorrectLabel.destroy()
 
@@ -112,14 +116,9 @@ class BankApp:
                     for line in f:
                         parts = line.strip().split(", ")
                         if len(parts) == 3 and parts[0] == user_id:
-                            try:
-                                checking = float(parts[1])
-                                savings = float(parts[2])
-                                break
-                            except ValueError:
-                                checking = 0.00
-                                savings = 0.00
-                                break
+                            checking = float(parts[1])
+                            savings = float(parts[2])
+                            break
             except FileNotFoundError:
                 with open("user_balance.txt", "w") as f:
                     f.write(f"{user_id}, 0.00, 0.00\n")
@@ -137,6 +136,7 @@ class BankApp:
                                         bg="maroon",
                                         fg="red")
             self.incorrectLabel.pack(pady=290)
+
 
 
     def show_login(self):

@@ -26,18 +26,18 @@ def new_user_window(parent_window):
             print("Please enter a valid username and password.")
             return
         
-        with open("user.txt", "r") as user_file:
-            existing_users = [line.strip() for line in user_file.readlines()]
+        with open("user_password.txt", "r") as user_file:
+            existing_users = [line.strip().split(", ")[0] for line in user_file.readlines()]
         
         if username in existing_users:
             print(f"Username '{username}' already exists. Please choose a different username.")
             return
         
-        with open("user.txt", "a") as user_file:
-            user_file.write(username + "\n")
-        
-        with open("pass.txt", "a") as pass_file:
-            pass_file.write(password + "\n")
+        with open("user_password.txt", "a+") as user_file:
+            user_file.seek(0, 2)  # move to the end of file
+            if user_file.tell() > 0:
+                user_file.write("\n")
+            user_file.write(f"{username}, {password}")
 
         with open("user_balance.txt", "a+") as balance_file:
             balance_file.seek(0, 2)  # move to the end of the file
@@ -50,4 +50,3 @@ def new_user_window(parent_window):
 
     submit_button = tk.Button(new_user, text="Submit", command=submit_user, bg="white", fg="black", width=15)
     submit_button.pack(pady=20)
-
