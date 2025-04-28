@@ -9,35 +9,37 @@ class UserMenu(BaseDialog):
         self._user_id = user_id
         self._show_login_callback = show_login_callback
         self._balances = balances
-        # Initialize StringVars before calling parent
+        # initialize StringVars before calling parent
         self._balance_var_checking = tk.StringVar()
         self._balance_var_savings = tk.StringVar()
         super().__init__(parent, "User Menu", width=600, height=600, bg_color="maroon")
 
     def _setup_ui(self):
-        # Set initial values for StringVars (still needed for operations)
-        self._balance_var_checking.set(f"Checking: ${self._balances[0]:.2f}")
-        self._balance_var_savings.set(f"Savings: ${self._balances[1]:.2f}")
-
-        # Header
+        # header
         tk.Label(self, text="User Menu",
                  font=("Times New Roman", 30), bg="maroon", fg="white").place(x=200, y=50)
 
-        # Buttons (positioned closer together)
+        # balance display
+        tk.Label(self, textvariable=self._balance_var_checking,
+                 font=("Times New Roman", 14), bg="maroon", fg="white").place(x=200, y=100)
+        tk.Label(self, textvariable=self._balance_var_savings,
+                 font=("Times New Roman", 14), bg="maroon", fg="white").place(x=200, y=130)
+
+        # buttons
         tk.Button(self, text="Check Balance", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_account_details).place(x=200, y=100)
+                  command=self._handle_account_details).place(x=200, y=150)
 
         tk.Button(self, text="Withdraw", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_withdrawal).place(x=200, y=150)
+                  command=self._handle_withdrawal).place(x=200, y=200)
 
         tk.Button(self, text="Deposit", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_deposit).place(x=200, y=200)
+                  command=self._handle_deposit).place(x=200, y=250)
 
         tk.Button(self, text="Transfer to Savings", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_transfer).place(x=200, y=250)
+                  command=self._handle_transfer).place(x=200, y=300)
 
         tk.Button(self, text="Logout", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_logout).place(x=200, y=300)
+                  command=self._handle_logout).place(x=200, y=350)
 
     def _handle_account_details(self):
         messagebox.showinfo("Account Details",
@@ -91,14 +93,8 @@ class WithdrawalDialog(BaseDialog):
                 return
 
             user_manager = UserManager()
-            current_balance = user_manager.get_balances(self._user_id)[0]
-
-            if amount > current_balance:
-                self._result_label.config(text="Insufficient funds for this withdrawal!", fg="red")
-                return
-
             if not user_manager.update_balance(self._user_id, "checking", -amount):
-                self._result_label.config(text="Transaction failed!", fg="red")
+                self._result_label.config(text="Insufficient funds or user not found!", fg="red")
                 return
 
             new_balance = user_manager.get_balances(self._user_id)[0]
@@ -158,48 +154,7 @@ class TransferDialog(BaseDialog):
         self._savings_var = savings_var
         super().__init__(parent, "Transfer to Savings", bg_color="gray")
 
-    def _setup_ui(self):
-        tk.Label(self, text="Transfer to Savings", font=("Times New Roman", 20), bg="gray", fg="white").pack(pady=10)
-        tk.Label(self, text="Enter transfer amount:", font=("Times New Roman", 14), bg="gray", fg="white").pack()
+    #def _setup_ui(self):
 
-        self._amount_entry = tk.Entry(self, font=("Times New Roman", 14))
-        self._amount_entry.pack(pady=5)
 
-        self._result_label = tk.Label(self, text="", font=("Times New Roman", 12), bg="gray", fg="white")
-        self._result_label.pack(pady=5)
-
-        tk.Button(self, text="Transfer", command=self._process_transfer,
-                  bg="white", fg="black", width=15).pack(pady=5)
-        tk.Button(self, text="Close", command=self.destroy,
-                  bg="white", fg="black", width=15).pack(pady=20)
-
-    def _process_transfer(self):
-        amount = self._amount_entry.get().strip()
-        try:
-            amount = float(amount.replace(",", ""))
-            if amount <= 0:
-                self._result_label.config(text="Enter a valid positive amount!", fg="red")
-                return
-
-            user_manager = UserManager()
-            current_balance = user_manager.get_balances(self._user_id)[0]
-
-            if amount > current_balance:
-                self._result_label.config(text="Insufficient funds in checking!", fg="red")
-                return
-
-            if not user_manager.update_balance(self._user_id, "checking", -amount):
-                self._result_label.config(text="Withdrawal from checking failed!", fg="red")
-                return
-
-            if not user_manager.update_balance(self._user_id, "savings", amount):
-                self._result_label.config(text="Deposit to savings failed!", fg="red")
-                return
-
-            checking, savings = user_manager.get_balances(self._user_id)
-            self._checking_var.set(f"Checking: ${checking:.2f}")
-            self._savings_var.set(f"Savings: ${savings:.2f}")
-            self._result_label.config(text=f"Transfer Successful: ${amount:.2f}", fg="green")
-
-        except ValueError:
-            self._result_label.config(text="Invalid input! Enter a number.", fg="red")
+    #def _process_transfer(self):

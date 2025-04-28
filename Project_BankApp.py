@@ -56,18 +56,25 @@ class BankApp:
                   command=lambda: NewUserDialog(self.master)).place(x=200, y=450)
 
     def _handle_login(self):
+        # reload users before checking credentials
+        self.user_manager.reload_users()
+
         username = self.user_entry.get().strip()
         password = self.pass_entry.get().strip()
 
+        print(f"Login attempt for: {username}")  # debug
+        print(f"Existing users: {self.user_manager._users.keys()}")  # debug
+
         if self.user_manager.authenticate(username, password):
+            print("Authentication successful")  # debug
             balances = self.user_manager.get_balances(username)
             if balances:
                 self.master.withdraw()
                 from Project_menu import UserMenu
                 UserMenu(self.master, username, balances, self._show_login)
         else:
+            print("Authentication failed")  # debug
             tk.Label(self.master, text="Invalid credentials!", fg="red", bg="maroon").place(x=200, y=500)
-
     def _show_login(self):
         self.user_entry.delete(0, tk.END)
         self.pass_entry.delete(0, tk.END)

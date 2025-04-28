@@ -1,3 +1,4 @@
+# new_user.py
 import tkinter as tk
 from tkinter import messagebox
 from base_dialog import BaseDialog
@@ -37,7 +38,11 @@ class NewUserDialog(BaseDialog):
             messagebox.showerror("Error", "Please enter both username and password")
             return
 
+        # Force immediate save after adding user
         if self._user_manager.add_user(username, password):
+            self._user_manager._save_users()  # Explicit save
+            print(f"User created: {username}")  # Debug
+            print(f"Current users: {self._user_manager._users}")  # Debug
             messagebox.showinfo("Success", f"User {username} created successfully!")
             self.destroy()
         else:
