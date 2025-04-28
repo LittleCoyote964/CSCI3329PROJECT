@@ -58,9 +58,6 @@ def handle_deposit():
 
 
 
-
-
-
 #continuing from the root window. 
 def open_menu(w, user_id, balance):
     def handle_logout():
