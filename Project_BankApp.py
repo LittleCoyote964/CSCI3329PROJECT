@@ -101,15 +101,20 @@ class BankApp:
                             font=("Times New Roman", 15),
                             show="*")#Hides the user input
         self.pass_entry.place(x=10,y=300)
+
+
+
+
+        
         # buttons
-        tk.Button(self.master, text="Login", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_login).place(x=200, y=350)
+        tk.Button(self.master, text="Login", width=23, height=2, bg="dark blue", fg="white",
+                  command=self._handle_login).place(x=10, y=400)
 
-        tk.Button(self.master, text="Forgot Password?", width=23, height=2, bg="gray", fg="black",
-                  command=lambda: ForgotPasswordDialog(self.master)).place(x=200, y=400)
+        tk.Button(self.master, text="Forgot Password?", width=23, height=2, bg="white", fg="dark blue", relief="flat", borderwidth=0,anchor='w',
+                  command=lambda: ForgotPasswordDialog(self.master)).place(x=10, y=350)
 
-        tk.Button(self.master, text="Create New User", width=23, height=2, bg="gray", fg="black",
-                  command=lambda: NewUserDialog(self.master)).place(x=200, y=450)
+        tk.Button(self.master, text="Create New User", width=23, height=2, bg="dark blue", fg="white",
+                  command=lambda: NewUserDialog(self.master)).place(x=10, y=450)
 
     def _handle_login(self):
         # reload users before checking credentials
