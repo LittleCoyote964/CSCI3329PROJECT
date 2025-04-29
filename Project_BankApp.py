@@ -1,151 +1,150 @@
 import tkinter as tk
 import tkinter.font as tkFont
-from forgot_password import forgot_password_window
-from new_user import new_user_window
-#FOR ROOT WINDOW
-class BankApp:
-    def __init__(self, master): #using master to have the "parent window
-        self.master = master # to keep the main window
-        self.master.title("Bank account Login")
-        self.master.configure(bg = "maroon")
+from PIL import Image, ImageTk
+from new_user import NewUserDialog
+from forgot_password import ForgotPasswordDialog
+from user_manager import UserManager
 
-        # window dimensions
-        self.win_width = 600
-        self.win_height = 600
-        self.master.geometry(f"{self.win_width}x{self.win_height}")
+
+class BankApp:
+    def __init__(self, master):
+        self.master = master
+        self.user_manager = UserManager()
+        self.master.title("Bank Account Login")
+        self.master.configure(bg="white")
+        self._setup_window()
+        self._setup_login_ui()
+
+    def _setup_window(self):
+        self.master.geometry("600x600")
+        self.master.resizable(False, False)
+        self._center_window()
+
+    def _center_window(self):
+        self.master.update_idletasks()
         screen_width = self.master.winfo_screenwidth()
         screen_height = self.master.winfo_screenheight()
-        x_position = (screen_width // 2) - (self.win_width // 2)
-        y_position = (screen_height // 2) - (self.win_height // 2)
-        self.master.geometry(f"{self.win_width}x{self.win_height}+{x_position}+{y_position}")
+        x = (screen_width // 2) - (600 // 2)
+        y = (screen_height // 2) - (600 // 2)
+        self.master.geometry(f"+{x}+{y}")
 
-        self.fontStyle = tkFont.Font(family="Times New Roman", size=20)
+    def _setup_login_ui(self):
+    #font style / we can change the font 
+        fontStyle = tkFont.Font(family="", size=18)
 
-        self.setup_login() # to start the set up for the ui
 
-    def setup_login(self):
-        #for header label**
-        self.headerLabel = tk.Label(text="Bank of Project", #change name whenever
-                            font=("Times New Roman", 30), 
-                            bg="maroon",
-                            fg="white")
-        self.headerLabel.place(x=175, y = 50)
+        # Load the image
+        logo_image = Image.open("logo.png")  
+        logo_image = logo_image.resize((250, 120))  # Resize as needed
+        logo_photo = ImageTk.PhotoImage(logo_image)
 
-        #username label**
-        self.userLabel = tk.Label(text="Username: ", 
-                            font=("Times New Roman", 20),
-                            bg="maroon",
-                            fg="white")
-        self.userLabel.place(x = 100, y = 150)
+        # Create label with image
+        headerLabel = tk.Label(image=logo_photo, bg="white")
+        headerLabel.image = logo_photo  # Keep a reference to avoid garbage collection
+        headerLabel.place(x=25, y=20)
 
-        #username entry**
-        self.userEntry = tk.Entry(fg="maroon",
-                                bg="white",
-                                width=10,
-                                font=("Times New Roman", 20))
-        self.userEntry.place(x=340,y=150)
+    # filler3 label
+        filler3Label = tk.Label(
+        text="Bank of America deposit products:\nUTRGV UTRGV-insured - Backed by the full faith and credit of the RGV community",
+        font=("Times New Roman", 10),
+        bg="light grey",
+        fg="grey",
+        padx=10,
+        anchor="center",      # <--- center text inside label
+        justify="center"      # <--- if multiline, center each line
+    )
+        filler3Label.pack(fill='x', pady=(0, 0))  # <--- removes any space at the top
 
-        #password label**
-        self.passLabel = tk.Label(text="Password:",
-                            font=("Times New Roman", 20),
-                            bg="maroon",
-                            fg="white")
-        self.passLabel.place(x=100,y=250)
+        # filler1 label
+        filler1Label = tk.Label( text="Log In to Online Banking", font=("Times New Roman", 20), bg="red",fg="white",anchor='w',padx=10)      # <-- little padding from the left edge
+        filler1Label.pack(fill='x', pady=(70, 0))
 
-        #password entry
-        self.passEntry = tk.Entry(bg="white",     
-                            fg="black", 
-                            width=10, 
-                            font=("Times New Roman", 20),
+        # filler2 label
+        filler2Label = tk.Label(text="Log In", font=("Times New Roman", 15), bg="white",fg="grey")      # <-- little padding from the left edge
+        filler2Label.place(x =300, y=70)
+
+    
+
+        # Load the image for filler3
+        filler_image = Image.open("filler.png")  
+        filler_image = filler_image.resize((350, 250))  # Resize as needed
+        filler_photo = ImageTk.PhotoImage(filler_image)
+
+        # Create label with image
+        fillerLabel = tk.Label( image=filler_photo, bg="white")
+        fillerLabel.image = filler_photo  # Keep a reference to avoid garbage collection
+        fillerLabel.place(x=255, y=150)
+
+
+
+        #label to have the user enter their username
+        userLabel = tk.Label(text="User ID ", 
+                            font=fontStyle,
+                            bg="white",
+                            fg="black")
+        userLabel.place(x = 10, y = 160)
+
+        #user entry
+        self.user_entry = tk.Entry(fg="maroon", bg="white",width=20, font=("Times New Roman", 15))
+        self.user_entry.place(x=10,y=200)
+
+        #label to have the user enter their password
+        passLabel = tk.Label(text="Password",
+                            font=fontStyle,
+                            bg="white",
+                            fg="black")
+        passLabel.place(x=10,y=260)
+
+        #user entry for their password
+        self.pass_entry = tk.Entry(fg="black",
+                            bg="white", 
+                            width=20, 
+                            font=("Times New Roman", 15),
                             show="*")#Hides the user input
-        self.passEntry.place(x=340,y=250)
+        self.pass_entry.place(x=10,y=300)
+        # buttons
+        tk.Button(self.master, text="Login", width=23, height=2, bg="gray", fg="black",
+                  command=self._handle_login).place(x=200, y=350)
 
-        #log in button
-        self.logButton = tk.Button(text="Login", 
-                            width =23, 
-                            height = 2, 
-                            bg="gray", 
-                            fg = "black", 
-                            command=self.handle_login)
-        self.logButton.place(x=200, y = 350)
+        tk.Button(self.master, text="Forgot Password?", width=23, height=2, bg="gray", fg="black",
+                  command=lambda: ForgotPasswordDialog(self.master)).place(x=200, y=400)
 
-        #forgot password button
-        self.forpassButt = tk.Button(text="Forgot Password?",
-                                width=23, 
-                                height=2, 
-                                bg="gray",
-                                fg="black",
-                                command = lambda: forgot_password_window(self.master))
-        self.forpassButt.place(x=200, y=400)
+        tk.Button(self.master, text="Create New User", width=23, height=2, bg="gray", fg="black",
+                  command=lambda: NewUserDialog(self.master)).place(x=200, y=450)
 
-        #create new user
-        self.newButton = tk.Button(text="Create new user",
-                            width = 23,
-                            height = 2,
-                            bg = "gray",
-                            fg = "black",
-                            command = lambda: new_user_window(self.master))
-        self.newButton.place(x = 200,y=450)
+    def _handle_login(self):
+        # reload users before checking credentials
+        self.user_manager.reload_users()
 
-    def handle_login(self):
-        print("Testing login button.")
-        user_id = self.userEntry.get().strip()
-        pssw = self.passEntry.get().strip()
+        username = self.user_entry.get().strip()
+        password = self.pass_entry.get().strip()
 
-        # Check credentials
-        login_success = False
-        try:
-            with open("user_password.txt", "r") as f:
-                for line in f:
-                    stored_user, stored_pass = line.strip().split(", ")
-                    if stored_user == user_id and stored_pass == pssw:
-                        login_success = True
-                        break
-        except FileNotFoundError:
-            print("No users found.")
-            login_success = False
+        print(f"Login attempt for: {username}")  # debug
+        print(f"Existing users: {self.user_manager._users.keys()}")  # debug
 
-        if login_success:
-            if hasattr(self, 'incorrectLabel') and self.incorrectLabel.winfo_exists():
-                self.incorrectLabel.destroy()
-
-            checking = 0.00
-            savings = 0.00
-            try:
-                with open("user_balance.txt", "r") as f:
-                    for line in f:
-                        parts = line.strip().split(", ")
-                        if len(parts) == 3 and parts[0] == user_id:
-                            checking = float(parts[1])
-                            savings = float(parts[2])
-                            break
-            except FileNotFoundError:
-                with open("user_balance.txt", "w") as f:
-                    f.write(f"{user_id}, 0.00, 0.00\n")
-                checking = 0.00
-                savings = 0.00
-
-            self.master.withdraw()
-            import Project_menu
-            Project_menu.open_menu(self.master, user_id, (checking, savings), show_login_callback=self.show_login)
+        if self.user_manager.authenticate(username, password):
+            print("Authentication successful")  # debug
+            balances = self.user_manager.get_balances(username)
+            if balances:
+                self.master.withdraw()
+                from Project_menu import UserMenu
+                UserMenu(self.master, username, balances, self._show_login)
         else:
-            print("ID or Password is incorrect!")
-            fontS = tkFont.Font(family="Times New Roman", size=10)
-            self.incorrectLabel = tk.Label(text="Password or Username is incorrect. Please try again.",
-                                        font=fontS,
-                                        bg="maroon",
-                                        fg="red")
-            self.incorrectLabel.pack(pady=290)
+            print("ID or Password is incorrect!") # need to make this part of the GUI
+            fontS = tkFont.Font(family="Times New Roman", size=8)
 
-
-
-    def show_login(self):
-        self.userEntry.delete(0, tk.END) 
-        self.passEntry.delete(0, tk.END)  
-        self.master.deiconify()           
+            incorrectLabel = tk.Label(text="Password or Username is incorrect. Please try again.", 
+                        font=fontS,
+                        bg="white",
+                        fg="red")
+            incorrectLabel.place(x=10,y=327)
+    def _show_login(self):
+        self.user_entry.delete(0, tk.END)
+        self.pass_entry.delete(0, tk.END)
+        self.master.deiconify()
 
 
 if __name__ == "__main__":
-    root = tk.Tk()     
+    root = tk.Tk()
     app = BankApp(root)
     root.mainloop()

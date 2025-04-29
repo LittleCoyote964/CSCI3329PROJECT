@@ -1,270 +1,161 @@
 import tkinter as tk
-import tkinter.font as tkFont
-import Project_BankApp
-#will work on menu for action user picks
-#menu for whenever the user is able to log in, will be imported to the Project_main.py
+from tkinter import messagebox
+from base_dialog import BaseDialog
+from user_manager import UserManager
 
-def handle_accountdetails(user_id, checking, savings):
-    account_window = tk.Toplevel()
-    account_window.title("Account Details")
-    account_window.geometry("400x300")
-    account_window.configure(bg="gray")
 
-    tk.Label(account_window, text="Account Details", font=("Times New Roman", 20), bg="gray", fg="white").pack(pady=10)
+class UserMenu(BaseDialog):
+    def __init__(self, parent, user_id, balances, show_login_callback):
+        self._user_id = user_id
+        self._show_login_callback = show_login_callback
+        self._balances = balances
+        # Initialize StringVars before calling parent
+        self._balance_var_checking = tk.StringVar()
+        self._balance_var_savings = tk.StringVar()
+        super().__init__(parent, "User Menu", width=600, height=600, bg_color="maroon")
 
-    tk.Label(account_window, text=f"Username: {user_id}", font=("Times New Roman", 14), bg="gray", fg="white").pack(pady=5)
+    def _setup_ui(self):
 
-    tk.Label(account_window, text=f"Checking Balance: ${checking:.2f}", font=("Times New Roman", 14), bg="gray", fg="white").pack(pady=5)
+        # header
+        tk.Label(self, text="User Menu",
+                 font=("Times New Roman", 30), bg="maroon", fg="white").place(x=200, y=50)
 
-    tk.Label(account_window, text=f"Savings Balance: ${savings:.2f}", font=("Times New Roman", 14), bg="gray", fg="white").pack(pady=5)
+        # buttons
+        tk.Button(self, text="Check Balance", width=23, height=2, bg="gray", fg="black",
+                  command=self._handle_account_details).place(x=200, y=100)
 
-    close_button = tk.Button(account_window, text="Close", command=account_window.destroy, bg="white", fg="black", width=15)
-    close_button.pack(pady=20)
+        tk.Button(self, text="Withdraw", width=23, height=2, bg="gray", fg="black",
+                  command=self._handle_withdrawal).place(x=200, y=150)
 
-def handle_withdrawal(user_id, balance_var):
-    withdrawal_window = tk.Toplevel()
-    withdrawal_window.title("Withdraw")
-    withdrawal_window.geometry("400x300")
-    withdrawal_window.configure(bg="gray")
+        tk.Button(self, text="Deposit", width=23, height=2, bg="gray", fg="black",
+                  command=self._handle_deposit).place(x=200, y=200)
 
-    tk.Label(withdrawal_window, text="Withdraw", font=("Times New Roman", 20), bg="gray", fg="white").pack(pady=10)
-    tk.Label(withdrawal_window, text="Enter withdrawal amount:", font=("Times New Roman", 14), bg="gray", fg="white").pack(pady=5)
+        tk.Button(self, text="Transfer to Savings", width=23, height=2, bg="gray", fg="black",
+                  command=self._handle_transfer).place(x=200, y=250)
 
-    withdrawal_entry = tk.Entry(withdrawal_window, font=("Times New Roman", 14))
-    withdrawal_entry.pack(pady=5)
+        tk.Button(self, text="Logout", width=23, height=2, bg="gray", fg="black",
+                  command=self._handle_logout).place(x=200, y=300)
 
-    result_label = tk.Label(withdrawal_window, text="", font=("Times New Roman", 12), bg="gray", fg="white")
-    result_label.pack(pady=5)
+    def _handle_account_details(self):
+        messagebox.showinfo("Account Details",
+                            f"Checking: ${self._balances[0]:.2f}\n"
+                            f"Savings: ${self._balances[1]:.2f}")
 
-    def process_withdrawal():
-        amount = withdrawal_entry.get().strip()
-        print(f"Raw input: '{amount}'")  # Debugging
+    def _handle_withdrawal(self):
+        withdrawal_dialog = WithdrawalDialog(self, self._user_id, self._balance_var_checking)
+        withdrawal_dialog.grab_set()
 
+    def _handle_deposit(self):
+        deposit_dialog = DepositDialog(self, self._user_id, self._balance_var_checking)
+        deposit_dialog.grab_set()
+
+    def _handle_transfer(self):
+        transfer_dialog = TransferDialog(self, self._user_id, self._balance_var_checking, self._balance_var_savings)
+        transfer_dialog.grab_set()
+
+    def _handle_logout(self):
+        self.destroy()
+        self._show_login_callback()
+
+
+class WithdrawalDialog(BaseDialog):
+    def __init__(self, parent, user_id, balance_var):
+        self._user_id = user_id
+        self._balance_var = balance_var
+        super().__init__(parent, "Withdraw", bg_color="gray")
+
+    def _setup_ui(self):
+        tk.Label(self, text="Withdraw", font=("Times New Roman", 20), bg="gray", fg="white").pack(pady=10)
+        tk.Label(self, text="Enter withdrawal amount:", font=("Times New Roman", 14), bg="gray", fg="white").pack()
+
+        self._amount_entry = tk.Entry(self, font=("Times New Roman", 14))
+        self._amount_entry.pack(pady=5)
+
+        self._result_label = tk.Label(self, text="", font=("Times New Roman", 12), bg="gray", fg="white")
+        self._result_label.pack(pady=5)
+
+        tk.Button(self, text="Withdraw", command=self._process_withdrawal,
+                  bg="white", fg="black", width=15).pack(pady=5)
+        tk.Button(self, text="Close", command=self.destroy,
+                  bg="white", fg="black", width=15).pack(pady=20)
+
+    def _process_withdrawal(self):
+        amount = self._amount_entry.get().strip()
         try:
             amount = float(amount.replace(",", ""))
-            print(f"Converted amount: {amount}")  # Debugging
-
             if amount <= 0:
-                result_label.config(text="Enter a valid positive amount!", fg="red")
+                self._result_label.config(text="Enter a valid positive amount!", fg="red")
                 return
 
-            updated_lines = []
-            found_user = False
+            user_manager = UserManager()
+            current_balance = user_manager.get_balances(self._user_id)[0]
 
-            with open("user_balance.txt", "r") as f:
-                lines = f.readlines()
-
-            for line in lines:
-                parts = line.strip().split(", ")
-                if len(parts) == 3 and parts[0] == user_id:
-                    checking = float(parts[1])
-                    savings = float(parts[2])
-                    if amount > checking:
-                        result_label.config(text="Insufficient funds!", fg="red")
-                        return
-                    new_checking = checking - amount
-                    updated_lines.append(f"{user_id}, {new_checking:.2f}, {savings:.2f}\n")
-                    found_user = True
-                else:
-                    updated_lines.append(line)
-
-            if not found_user:
-                result_label.config(text="User not found!", fg="red")
+            if amount > current_balance:
+                self._result_label.config(text="Insufficient funds for this withdrawal!", fg="red")
                 return
 
-            with open("user_balance.txt", "w") as f:
-                f.writelines(updated_lines)
+            if not user_manager.update_balance(self._user_id, "checking", -amount):
+                self._result_label.config(text="Transaction failed!", fg="red")
+                return
 
-            balance_var.set(f"Checking: ${new_checking:.2f}")
-            result_label.config(text=f"Withdrawal Successful: ${amount:.2f}", fg="green")
+            new_balance = user_manager.get_balances(self._user_id)[0]
+            self._balance_var.set(f"Checking: ${new_balance:.2f}")
+            self._result_label.config(text=f"Withdrawal Successful: ${amount:.2f}", fg="green")
 
-        except ValueError as e:
-            print(f"ValueError: {e}")
-            result_label.config(text="Invalid input! Enter a number.", fg="red")
-
-    withdraw_button = tk.Button(withdrawal_window, text="Withdraw", command=process_withdrawal, bg="white", fg="black", width=15)
-    withdraw_button.pack(pady=5)
-
-    close_button = tk.Button(withdrawal_window, text="Close", command=withdrawal_window.destroy, bg="white", fg="black", width=15)
-    close_button.pack(pady=20)
+        except ValueError:
+            self._result_label.config(text="Invalid input! Enter a number.", fg="red")
 
 
-def handle_deposit(user_id, balance_var):
-    deposit_window = tk.Toplevel()
-    deposit_window.title("Deposit")
-    deposit_window.geometry("400x300")
-    deposit_window.configure(bg="gray")
+class DepositDialog(BaseDialog):
+    def __init__(self, parent, user_id, balance_var):
+        self._user_id = user_id
+        self._balance_var = balance_var
+        super().__init__(parent, "Deposit", bg_color="gray")
 
-    tk.Label(deposit_window, text="Deposit", font=("Times New Roman", 20), bg="gray", fg="white").pack(pady=10)
-    tk.Label(deposit_window, text="Enter deposit amount:", font=("Times New Roman", 14), bg="gray", fg="white").pack(pady=5)
+    def _setup_ui(self):
+        tk.Label(self, text="Deposit", font=("Times New Roman", 20), bg="gray", fg="white").pack(pady=10)
+        tk.Label(self, text="Enter deposit amount:", font=("Times New Roman", 14), bg="gray", fg="white").pack()
 
-    deposit_entry = tk.Entry(deposit_window, font=("Times New Roman", 14))
-    deposit_entry.pack(pady=5)
+        self._amount_entry = tk.Entry(self, font=("Times New Roman", 14))
+        self._amount_entry.pack(pady=5)
 
-    result_label = tk.Label(deposit_window, text="", font=("Times New Roman", 12), bg="gray", fg="white")
-    result_label.pack(pady=5)
+        self._result_label = tk.Label(self, text="", font=("Times New Roman", 12), bg="gray", fg="white")
+        self._result_label.pack(pady=5)
 
-    def process_deposit():
-        amount = deposit_entry.get().strip()
-        print(f"Raw input: '{amount}'")
+        tk.Button(self, text="Deposit", command=self._process_deposit,
+                  bg="white", fg="black", width=15).pack(pady=5)
+        tk.Button(self, text="Close", command=self.destroy,
+                  bg="white", fg="black", width=15).pack(pady=20)
 
+    def _process_deposit(self):
+        amount = self._amount_entry.get().strip()
         try:
             amount = float(amount.replace(",", ""))
-            print(f"Converted amount: {amount}")
-
             if amount <= 0:
-                result_label.config(text="Enter a valid positive amount!", fg="red")
+                self._result_label.config(text="Enter a valid positive amount!", fg="red")
                 return
 
-            updated_lines = []
-            found_user = False
-
-            with open("user_balance.txt", "r") as f:
-                lines = f.readlines()
-
-            for line in lines:
-                parts = line.strip().split(", ")
-                if len(parts) == 3 and parts[0] == user_id:
-                    checking = float(parts[1])
-                    savings = float(parts[2])
-                    new_checking = checking + amount
-                    updated_lines.append(f"{user_id}, {new_checking:.2f}, {savings:.2f}\n")
-                    found_user = True
-                else:
-                    updated_lines.append(line)
-
-            if not found_user:
-                result_label.config(text="User not found!", fg="red")
+            user_manager = UserManager()
+            if not user_manager.update_balance(self._user_id, "checking", amount):
+                self._result_label.config(text="User not found!", fg="red")
                 return
 
-            with open("user_balance.txt", "w") as f:
-                f.writelines(updated_lines)
+            new_balance = user_manager.get_balances(self._user_id)[0]
+            self._balance_var.set(f"Checking: ${new_balance:.2f}")
+            self._result_label.config(text=f"Deposit Successful: ${amount:.2f}", fg="green")
 
-            balance_var.set(f"Checking: ${new_checking:.2f}")
-            result_label.config(text=f"Deposit Successful: ${amount:.2f}", fg="green")
-
-        except ValueError as e:
-            print(f"ValueError: {e}")
-            result_label.config(text="Invalid input! Enter a number.", fg="red")
-
-    deposit_button = tk.Button(deposit_window, text="Deposit", command=process_deposit, bg="white", fg="black", width=15)
-    deposit_button.pack(pady=5)
-
-    close_button = tk.Button(deposit_window, text="Close", command=deposit_window.destroy, bg="white", fg="black", width=15)
-    close_button.pack(pady=20)
+        except ValueError:
+            self._result_label.config(text="Invalid input! Enter a number.", fg="red")
 
 
-#will create a new button to transfer money from a their "checkings to a savings account"
-def handle_transfer(user_id, balance_var, balance_var_savings):
-    print('this is a test to make sure the transfer button works')
-#continuing from the root window. 
-def open_menu(w, user_id, balance,show_login_callback):
-    def handle_logout():
-        print("Testing, this is for logging the user out")
-        menu.destroy()
-        show_login_callback()
-    
-    def refresh_balance_and_open(user_id):
-        checking = 0.00
-        savings = 0.00
-        try:
-            with open("user_balance.txt", "r") as f:
-                for line in f:
-                    parts = line.strip().split(", ")
-                    if len(parts) == 3 and parts[0] == user_id:
-                        checking = float(parts[1])
-                        savings = float(parts[2])
-                        break
-        except FileNotFoundError:
-            pass
+class TransferDialog(BaseDialog):
+    def __init__(self, parent, user_id, checking_var, savings_var):
+        self._user_id = user_id
+        self._checking_var = checking_var
+        self._savings_var = savings_var
+        super().__init__(parent, "Transfer to Savings", bg_color="gray")
 
-        handle_accountdetails(user_id, checking, savings)
+    #def _setup_ui(self):
 
 
-    menu = tk.Toplevel(w)
-    menu.title("User menu")
-    menu.configure(bg="Maroon")
-    menu.geometry("600x600")
-
-    # make StringVar for balance display
-    balance_var_checking = tk.StringVar()
-    balance_var_savings = tk.StringVar()
-
-    balance_var_checking.set(f"Checking: ${balance[0]:.2f}")
-    balance_var_savings.set(f"Savings: ${balance[1]:.2f}")
-
-    # balance display label
-    balance_label_checking = tk.Label(menu,
-                                  textvariable=balance_var_checking,
-                                  font=("Times New Roman", 14),
-                                  bg="maroon",
-                                  fg="white")
-    balance_label_checking.place(x=200, y=100)
-
-    balance_label_savings = tk.Label(menu,
-                                 textvariable=balance_var_savings,
-                                 font=("Times New Roman", 14),
-                                 bg="maroon",
-                                 fg="white")
-    balance_label_savings.place(x=200, y=130)
-
-    # menu header
-    menuHeader = tk.Label(menu,
-                          text="User Menu",
-                          font=("Times New Roman", 30),
-                          bg="maroon",
-                          fg="white")
-    menuHeader.place(x=200, y=50)
-
-    # check balance button
-    detailOpt = tk.Button(menu,
-                          text="Check Balance",
-                          width=23,
-                          height=2,
-                          bg="gray",
-                          fg="black",
-                          command=lambda: refresh_balance_and_open(user_id))
-    detailOpt.place(x=200, y=150)
-
-    # withdrawal button
-    withdrawal = tk.Button(menu,
-                           text="Withdraw",
-                           width=23,
-                           height=2,
-                           bg="gray",
-                           fg="black",
-                           command=lambda: handle_withdrawal(user_id, balance_var_checking))
-    withdrawal.place(x=200, y=200)
-
-    # deposit button
-    deposit = tk.Button(menu,
-                        text="Deposit",
-                        width=23,
-                        height=2,
-                        bg="gray",
-                        fg="black",
-                        command=lambda: handle_deposit(user_id, balance_var_checking))
-    deposit.place(x=200, y=250)
-
-    transfer_to_savings = tk.Button(menu,
-                                    text= "Transfer to Savings",
-                                    width = 23,
-                                    height = 2,
-                                    bg = "gray",
-                                    fg = "black",
-                                    command=lambda: handle_transfer(user_id, balance_var_checking, balance_var_savings))
-    transfer_to_savings.place(x = 200, y = 300)
-
-    # logout button
-    logOut = tk.Button(menu,
-                       text="Log out user",
-                       width=23,
-                       height=2,
-                       bg="gray",
-                       fg="black",
-                       command=handle_logout)
-    logOut.place(x=200, y=350)
-
-    
-
-
+    #def _process_transfer(self):
