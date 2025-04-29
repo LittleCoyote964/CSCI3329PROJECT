@@ -96,7 +96,8 @@ class BankApp:
         passLabel.place(x=10,y=260)
 
         #user entry for their password
-        self.pass_entry = tk.Entry(fg="maroon", 
+        self.pass_entry = tk.Entry(fg="black",
+                            bg="white", 
                             width=20, 
                             font=("Times New Roman", 15),
                             show="*")#Hides the user input
