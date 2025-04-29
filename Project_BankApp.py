@@ -66,7 +66,7 @@ class BankApp:
     
 
         # Load the image for filler3
-        filler_image = Image.open("Screenshot (283).png")  
+        filler_image = Image.open("filler.png")  
         filler_image = filler_image.resize((350, 250))  # Resize as needed
         filler_photo = ImageTk.PhotoImage(filler_image)
 
@@ -85,8 +85,8 @@ class BankApp:
         userLabel.place(x = 10, y = 160)
 
         #user entry
-        userEntry = tk.Entry(fg="maroon", bg="white",width=20, font=("Times New Roman", 15))
-        userEntry.place(x=10,y=200)
+        self.user_entry = tk.Entry(fg="maroon", bg="white",width=20, font=("Times New Roman", 15))
+        self.user_entry.place(x=10,y=200)
 
         #label to have the user enter their password
         passLabel = tk.Label(text="Password",
@@ -96,11 +96,11 @@ class BankApp:
         passLabel.place(x=10,y=260)
 
         #user entry for their password
-        passEntry = tk.Entry(fg="maroon", 
+        self.pass_entry = tk.Entry(fg="maroon", 
                             width=20, 
                             font=("Times New Roman", 15),
                             show="*")#Hides the user input
-        passEntry.place(x=10,y=300)
+        self.pass_entry.place(x=10,y=300)
         # buttons
         tk.Button(self.master, text="Login", width=23, height=2, bg="gray", fg="black",
                   command=self._handle_login).place(x=200, y=350)
