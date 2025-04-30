@@ -184,4 +184,6 @@ class TransferDialog(BaseDialog):
             user_manager = UserManager()
             if not user_manager.update_balance(self._user_id, "Savings", amount):
                 self._result_label.config("User not found!", fg = "red")
+        except ValueError:
+            self.result_label.config(text="Invalid amount format.", fg="red")
 
