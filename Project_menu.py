@@ -37,9 +37,16 @@ class UserMenu(BaseDialog):
                   command=self._handle_logout).place(x=200, y=300)
 
     def _handle_account_details(self):
-        messagebox.showinfo("Account Details",
-                            f"Checking: ${self._balances[0]:.2f}\n"
-                            f"Savings: ${self._balances[1]:.2f}")
+        um = UserManager()
+        updated_balances = um.get_balances(self._user_id)
+
+        if updated_balances:
+            self._balances = updated_balances
+            messagebox.showinfo("Account Details",
+                                f"Checking: ${self._balances[0]:.2f}\n"
+                                f"Savings: ${self._balances[1]:.2f}")
+        else:
+            messagebox.showerror("Error", "Failed to retrieve account details.")
 
     def _handle_withdrawal(self):
         withdrawal_dialog = WithdrawalDialog(self, self._user_id, self._balance_var_checking)
