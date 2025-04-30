@@ -12,29 +12,85 @@ class UserMenu(BaseDialog):
         # Initialize StringVars before calling parent
         self._balance_var_checking = tk.StringVar()
         self._balance_var_savings = tk.StringVar()
-        super().__init__(parent, "User Menu", width=600, height=600, bg_color="maroon")
+        super().__init__(parent, "User Menu", width=600, height=600, bg_color="white")
 
     def _setup_ui(self):
+        # Welcome message
+        message = tk.Label(self, text=f"Hello, {self._user_id}",font=("bold", 16), bg="white",fg="black")
+        message.place(x=25,y=110)
+        # Title label
+        titleLabel = tk.Label(self, text="Personal accounts", 
+                            font=("Times New Roman", 11), 
+                            bg="white", fg="black", anchor="w",width=36, padx=15)
+        titleLabel.place(x=25, y=172)
+
+        # Divider line
+        divider = tk.Frame(self, bg="dark blue", height=2, width=360)
+        divider.place(x=25, y=197)
+
+        # "Checking" label (left)
+        checkingLabel = tk.Label(self, text="My Checking\n", 
+                                font=("Times New Roman", 15),
+                                bg="lightgrey",
+                                fg="dark blue",
+                                anchor="w",  # west (left) alignment
+                                width=15,
+                                padx=15)
+        checkingLabel.place(x=25, y=200)
+
+        # Checking amount (right)
+        checkingAmount = tk.Label(self, text=f"${self._balances[0]:.2f}\n", 
+                                font=("Times New Roman", 15),
+                                bg="lightgrey",
+                                fg="dark blue",
+                                anchor="e",  # east (right) alignment
+                                width=17)
+        checkingAmount.place(x=190, y=200)
+
+        # "Savings" label (left)
+        savingsLabel = tk.Label(self, text="My Savings\n", 
+                                font=("Times New Roman", 15),
+                                bg="lightgrey",
+                                fg="dark blue",
+                                anchor="w",
+                                width=15,
+                                padx=15)
+        savingsLabel.place(x=25, y=260)
+
+        # Savings amount (right)
+        savingsAmount = tk.Label(self, text=f"${self._balances[1]:.2f}\n", 
+                                font=("Times New Roman", 15),
+                                bg="lightgrey",
+                                fg="dark blue",
+                                anchor="e",
+                                width=17)
+        savingsAmount.place(x=190, y=260)
 
         # header
-        tk.Label(self, text="User Menu",
-                 font=("Times New Roman", 30), bg="maroon", fg="white").place(x=200, y=50)
+        tk.Label(self, text="Accounts",
+                 font=("Times New Roman", 15), width=14, height=2, bg="white", fg="black",pady=2, relief="ridge").place(x=0, y=50)
 
         # buttons
-        tk.Button(self, text="Check Balance", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_account_details).place(x=200, y=100)
+        
+        tk.Button(self, text="Withdraw", font=("Times New Roman", 13), width=17, height=2, bg="light grey", fg="black",
+                  command=self._handle_withdrawal).place(x=450, y=50)
 
-        tk.Button(self, text="Withdraw", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_withdrawal).place(x=200, y=150)
+        tk.Button(self, text="Deposit", font=("Times New Roman", 13), width=17, height=2, bg="light grey", fg="black",
+                  command=self._handle_deposit).place(x=300, y=50)
 
-        tk.Button(self, text="Deposit", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_deposit).place(x=200, y=200)
+        tk.Button(self, text="Transfer",font=("Times New Roman", 13), width=17, height=2, bg="light grey", fg="black",
+                  command=self._handle_transfer).place(x=150, y=50)
+        # top border
+        tk.Label(self, text="BANK OF AMERICA",font=("Calibri",13,"bold"),bg="red",fg="white", anchor="w", padx=10,pady=14).pack(fill='x', pady=(0, 0))
 
-        tk.Button(self, text="Transfer to Savings", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_transfer).place(x=200, y=250)
+        # filler
+        tk.Label(self, text="Online Banking",font=("Times New Roman",13),bg="red",fg="white").place(x=200,y=15)
 
-        tk.Button(self, text="Logout", width=23, height=2, bg="gray", fg="black",
-                  command=self._handle_logout).place(x=200, y=300)
+        # filler2
+        tk.Label(self, text="Update profile  |  Security Center",font=("Times New Roman",10),bg="white",fg="blue").place(x=150,y=115)
+
+        tk.Button(self, text="Log Out", bg="red", fg="white", relief="flat", borderwidth=0,
+                  command=self._handle_logout).place(x=535, y=5)
 
     def _handle_account_details(self):
         messagebox.showinfo("Account Details",

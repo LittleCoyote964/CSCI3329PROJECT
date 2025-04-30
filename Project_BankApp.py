@@ -85,7 +85,7 @@ class BankApp:
         userLabel.place(x = 10, y = 160)
 
         #user entry
-        self.user_entry = tk.Entry(fg="maroon", bg="white",width=20, font=("Times New Roman", 15))
+        self.user_entry = tk.Entry(fg="black", bg="white",width=20, font=("Times New Roman", 15))
         self.user_entry.place(x=10,y=200)
 
         #label to have the user enter their password
@@ -149,7 +149,3 @@ class BankApp:
         self.master.deiconify()
 
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = BankApp(root)
-    root.mainloop()
