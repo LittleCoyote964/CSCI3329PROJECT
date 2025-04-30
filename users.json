@@ -1,8 +1,8 @@
 {
     "gabriel3": {
         "password": "12345",
-        "checking": 200.0,
-        "savings": 0.0
+        "checking": 100.0,
+        "savings": 125.0
     },
     "ndeleon01": {
         "password": "1234",
@@ -12,6 +12,21 @@
     "kgonz": {
         "password": "123qwe",
         "checking": 0.0,
+        "savings": 0.0
+    },
+    "fabian12": {
+        "password": "abc123",
+        "checking": 500000.0,
+        "savings": 500000.0
+    },
+    "gabriel4": {
+        "password": "123qwe",
+        "checking": 0.0,
+        "savings": 0.0
+    },
+    "danic": {
+        "password": "1234",
+        "checking": 300.0,
         "savings": 0.0
     }
 }
