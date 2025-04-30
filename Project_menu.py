@@ -147,15 +147,57 @@ class DepositDialog(BaseDialog):
         except ValueError:
             self._result_label.config(text="Invalid input! Enter a number.", fg="red")
 
-
+#child class to transfer funds from checkings to savings
 class TransferDialog(BaseDialog):
     def __init__(self, parent, user_id, checking_var, savings_var):
         self._user_id = user_id
         self._checking_var = checking_var
         self._savings_var = savings_var
         super().__init__(parent, "Transfer to Savings", bg_color="gray")
+    #adjusting the gui for the transfer button when pressed
+    def _setup_ui(self):
+        tk.Label(self, text = "Transfer to Savings", font = ("Time New Roman", 12), bg = "gray", fg = "white").pack(paddy = 10)
+        tk.Label(self, text = "Enter the amount you want to transfer:", font = ("Times New Roman", 14), bg = "gray", fg = "white").pack()
 
-    #def _setup_ui(self):
+        self._amount_entry = tk.Entry(self, font = ("Times New Roman", 12))
+        self._amount_entry.pack(pady=5)
 
+        self._result_label = tk.Label(self, text="", font=("Times New Roman", 12), bg="gray", fg="white")
+        self._result_label.pack(pady=5)
 
-    #def _process_transfer(self):
+        tk.Button(self, text="Transfer", command=self._process_transfer,
+                  bg="white", fg="black", width=15).pack(pady=5)
+        tk.Button(self, text="Close", command=self.destroy,
+                  bg="white", fg="black", width=15).pack(pady=20)
+    
+    #this will calculate and enter the amount that is stored into the savings account. 
+    def _process_transfer(self):
+        amount = self._amount_entry.get().strip()
+
+    #will add error handling to the process
+        try:
+            amount = float(amount.replace(",", ""))
+            if amount <= 0:
+                self.result_label.config(text = "Please enter a valid amount.", fg = "red")
+                return
+            #checks to see if the user is logged in
+            um = UserManager() 
+            #to subtract the amount from the checkings
+            ok_checkings = um.update_balance(self._user_id, "checkings", -amount)
+            if not ok_checkings:
+                self._result_label.config("User not found or insufficient funds!", fg = "red")
+                return
+            #to add the amount to the savings
+            ok_savings = um.update_balance(self.user_id, "savings", amount)
+            if not ok_savings:
+                self._result_label.config("Transfer failed!", fg = "red")
+            
+            check, saving = um.get_balances(self.user_id)
+            self._checking_var.set(f"Checking: ${check: .2f}")
+            self._savings_var.set(f"Savings: ${saving: .2f}")
+
+            self._result_label.config(text = f"Transferred ${amount: .2f}", fg = "green")
+
+        except ValueError:
+            self.result_label.config(text="Invalid amount format.", fg="red")
+
