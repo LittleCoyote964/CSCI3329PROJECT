@@ -184,7 +184,7 @@ class TransferDialog(BaseDialog):
             #checks to see if the user is logged in
             um = UserManager() 
             #to subtract the amount from the checkings
-            ok_checkings = um.update_balance(self._user_id, "checkings", -amount)
+            ok_checkings = um.update_balance(self._user_id, "checking", -amount)
             if not ok_checkings:
                 self._result_label.config(text="User not found or insufficient funds!", fg = "red")
                 return
@@ -200,5 +200,5 @@ class TransferDialog(BaseDialog):
             self._result_label.config(text = f"Transferred ${amount: .2f}", fg = "green")
 
         except ValueError:
-            self.result_label.config(text="Invalid amount format.", fg="red")
+            self._result_label.config(text="Invalid amount format.", fg="red")
 
