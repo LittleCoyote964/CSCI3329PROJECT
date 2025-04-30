@@ -9,6 +9,7 @@ from user_manager import UserManager
 class BankApp:
     def __init__(self, master):
         self.master = master
+        self.incorrect_label = None
         self.user_manager = UserManager()
         self.master.title("Bank Account Login")
         self.master.configure(bg="white")
@@ -127,6 +128,10 @@ class BankApp:
         print(f"Login attempt for: {username}")  # debug
         print(f"Existing users: {self.user_manager._users.keys()}")  # debug
 
+        if self.incorrect_label:
+            self.incorrect_label.destroy()
+            self.incorrect_label = None
+
         if self.user_manager.authenticate(username, password):
             print("Authentication successful")  # debug
             balances = self.user_manager.get_balances(username)
@@ -138,15 +143,19 @@ class BankApp:
             print("ID or Password is incorrect!") # need to make this part of the GUI
             fontS = tkFont.Font(family="Times New Roman", size=8)
 
-            incorrectLabel = tk.Label(text="Password or Username is incorrect. Please try again.", 
+            self.incorrect_label = tk.Label(text="Password or Username is incorrect. Please try again.", 
                         font=fontS,
                         bg="white",
                         fg="red")
-            incorrectLabel.place(x=10,y=327)
+            self.incorrect_label.place(x=10,y=327)
     def _show_login(self):
         self.user_entry.delete(0, tk.END)
         self.pass_entry.delete(0, tk.END)
         self.master.deiconify()
+
+        if self.incorrect_label:
+            self.incorrect_label.destroy()
+            self.incorrect_label = None
 
 
 if __name__ == "__main__":
