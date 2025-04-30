@@ -181,9 +181,23 @@ class TransferDialog(BaseDialog):
                 self.result_label.config(text = "Please enter a valid amount.", fg = "red")
                 return
             #checks to see if the user is logged in
-            user_manager = UserManager()
-            if not user_manager.update_balance(self._user_id, "Savings", amount):
-                self._result_label.config("User not found!", fg = "red")
+            um = UserManager() 
+            #to subtract the amount from the checkings
+            ok_checkings = um.update_balance(self._user_id, "checkings", -amount)
+            if not ok_checkings:
+                self._result_label.config("User not found or insufficient funds!", fg = "red")
+                return
+            #to add the amount to the savings
+            ok_savings = um.update_balance(self.user_id, "savings", amount)
+            if not ok_savings:
+                self._result_label.config("Transfer failed!", fg = "red")
+            
+            check, saving = um.get_balances(self.user_id)
+            self._checking_var.set(f"Checking: ${check: .2f}")
+            self._savings_var.set(f"Savings: ${saving: .2f}")
+
+            self._result_label.config(text = f"Transferred ${amount: .2f}", fg = "green")
+
         except ValueError:
             self.result_label.config(text="Invalid amount format.", fg="red")
 
