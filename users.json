@@ -1,5 +1,4 @@
 {
-    
     "gabriel3": {
         "password": "12345",
         "checking": 200.0,
@@ -9,5 +8,10 @@
         "password": "1234",
         "checking": 9600.0,
         "savings": 300.0
+    },
+    "kgonz": {
+        "password": "123qwe",
+        "checking": 0.0,
+        "savings": 0.0
     }
 }
