@@ -23,5 +23,10 @@
         "password": "123qwe",
         "checking": 0.0,
         "savings": 0.0
+    },
+    "danic": {
+        "password": "1234",
+        "checking": 300.0,
+        "savings": 0.0
     }
 }
