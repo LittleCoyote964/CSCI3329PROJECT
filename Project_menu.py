@@ -153,11 +153,12 @@ class TransferDialog(BaseDialog):
         self._user_id = user_id
         self._checking_var = checking_var
         self._savings_var = savings_var
+    
         super().__init__(parent, "Transfer to Savings", bg_color="gray")
     #adjusting the gui for the transfer button when pressed
     def _setup_ui(self):
-        tk.Label(self, text = "Transfer to Savings", font = ("Time New Roman", 12), bg = "gray", fg = "white").pack(paddy = 10)
-        tk.Label(self, text = "Enter the amount you want to transfer:", font = ("Times New Roman", 14), bg = "gray", fg = "white").pack()
+        tk.Label(self, text="Transfer to Savings", font = ("Time New Roman", 12), bg = "gray", fg = "white").pack(pady=10)
+        tk.Label(self, text="Enter the amount you want to transfer:", font = ("Times New Roman", 14), bg = "gray", fg = "white").pack()
 
         self._amount_entry = tk.Entry(self, font = ("Times New Roman", 12))
         self._amount_entry.pack(pady=5)
@@ -178,21 +179,21 @@ class TransferDialog(BaseDialog):
         try:
             amount = float(amount.replace(",", ""))
             if amount <= 0:
-                self.result_label.config(text = "Please enter a valid amount.", fg = "red")
+                self._result_label.config(text="Please enter a valid amount.", fg = "red")
                 return
             #checks to see if the user is logged in
             um = UserManager() 
             #to subtract the amount from the checkings
             ok_checkings = um.update_balance(self._user_id, "checkings", -amount)
             if not ok_checkings:
-                self._result_label.config("User not found or insufficient funds!", fg = "red")
+                self._result_label.config(text="User not found or insufficient funds!", fg = "red")
                 return
             #to add the amount to the savings
-            ok_savings = um.update_balance(self.user_id, "savings", amount)
+            ok_savings = um.update_balance(self._user_id, "savings", amount)
             if not ok_savings:
-                self._result_label.config("Transfer failed!", fg = "red")
+                self._result_label.config(text="Transfer failed!", fg = "red")
             
-            check, saving = um.get_balances(self.user_id)
+            check, saving = um.get_balances(self._user_id)
             self._checking_var.set(f"Checking: ${check: .2f}")
             self._savings_var.set(f"Savings: ${saving: .2f}")
 

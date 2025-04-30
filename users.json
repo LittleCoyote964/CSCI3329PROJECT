@@ -4,8 +4,12 @@
 =======
     "gabriel3": {
         "password": "12345",
->>>>>>> 6fda45def765f09b02cdeb27998e20ba81e8fe58
-        "checking": 0.0,
+        "checking": 200.0,
+        "savings": 0.0
+    },
+    "ndeleon01": {
+        "password": "1234",
+        "checking": 9900.0,
         "savings": 0.0
     }
 }
