@@ -183,7 +183,7 @@ class DepositDialog(BaseDialog):
         #will give the user the choice to pick where to deposit their funds
         self._account_var = tk.StringVar(value="checking")
         choices_frame = tk.Frame(self, bg ="gray")
-        tk.Radiobutton(choices_frame, text = "Checking", bg="gray", fg="white").pack(side="left",padx=10)
+        tk.Radiobutton(choices_frame, text = "Checking",variable=self._account_var, value="checking", bg="gray", fg="white").pack(side="left",padx=10)
         tk.Radiobutton(choices_frame, text="Savings", variable=self._account_var, value="savings", bg="gray", fg="white").pack(side="left",padx=10)
         choices_frame.pack(pady=5)
 
@@ -210,16 +210,19 @@ class DepositDialog(BaseDialog):
                 return
 
             user_manager = UserManager()
-            if not user_manager.update_balance(self._user_id, "checking", amount):
+            if not user_manager.update_balance(self._user_id, account, amount):
                 self._result_label.config(text="User not found!", fg="red")
                 return
             
             #to refresh the display
-            balances = user_manager.get_balances(self._user_id)[0]
+            checking, savings = user_manager.get_balances(self._user_id)
 
-            new_balance = balances[0] if account == "checking" else balances[1]
-            label_text = f"{account.capitalize()}: ${new_balance:.2f}"
-            self._balance_var.set(label_text)
+            new_balance = checking if account == "checking" else savings
+            #label_text = (f"{account.capitalize()}: ${new_balance:.2f}")
+            self._balance_var.set(
+                f"{account.capitalize()}: ${new_balance:.2f}"
+            )
+
 
             self._result_label.config(
                 text=f"Deposit Successful: ${amount:.2f} to {account}", fg="green")
