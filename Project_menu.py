@@ -109,7 +109,7 @@ class UserMenu(BaseDialog):
         withdrawal_dialog.grab_set()
 
     def _handle_deposit(self):
-        deposit_dialog = DepositDialog(self, self._user_id, self._balance_var_checking)
+        deposit_dialog = DepositDialog(self, self._user_id, self._balances, self._balance_var_checking)
         deposit_dialog.grab_set()
 
     def _handle_transfer(self):
@@ -170,14 +170,23 @@ class WithdrawalDialog(BaseDialog):
 
 
 class DepositDialog(BaseDialog):
-    def __init__(self, parent, user_id, balance_var):
+    def __init__(self, parent, user_id, balances, balance_var):
         self._user_id = user_id
         self._balance_var = balance_var
+        self._balances = balances
         super().__init__(parent, "Deposit", bg_color="gray")
 
     def _setup_ui(self):
-        tk.Label(self, text="Deposit", font=("Times New Roman", 20), bg="gray", fg="white").pack(pady=10)
+        tk.Label(self, text="Please choose account", font=("Times New Roman", 20), bg="gray", fg="white").pack(pady=10)
         tk.Label(self, text="Enter deposit amount:", font=("Times New Roman", 14), bg="gray", fg="white").pack()
+
+        #will give the user the choice to pick where to deposit their funds
+        self._account_var = tk.StringVar(value="checking")
+        choices_frame = tk.Frame(self, bg ="gray")
+        tk.Radiobutton(choices_frame, text = "Checking", bg="gray", fg="white").pack(side="left",padx=10)
+        tk.Radiobutton(choices_frame, text="Savings", variable=self._account_var, value="savings", bg="gray", fg="white").pack(side="left",padx=10)
+        choices_frame.pack(pady=5)
+
 
         self._amount_entry = tk.Entry(self, font=("Times New Roman", 14))
         self._amount_entry.pack(pady=5)
@@ -191,6 +200,8 @@ class DepositDialog(BaseDialog):
                   bg="white", fg="black", width=15).pack(pady=20)
 
     def _process_deposit(self):
+        #depending on the account the user picks
+        account = self._account_var.get()
         amount = self._amount_entry.get().strip()
         try:
             amount = float(amount.replace(",", ""))
@@ -202,10 +213,16 @@ class DepositDialog(BaseDialog):
             if not user_manager.update_balance(self._user_id, "checking", amount):
                 self._result_label.config(text="User not found!", fg="red")
                 return
+            
+            #to refresh the display
+            balances = user_manager.get_balances(self._user_id)[0]
 
-            new_balance = user_manager.get_balances(self._user_id)[0]
-            self._balance_var.set(f"Checking: ${new_balance:.2f}")
-            self._result_label.config(text=f"Deposit Successful: ${amount:.2f}", fg="green")
+            new_balance = balances[0] if account == "checking" else balances[1]
+            label_text = f"{account.capitalize()}: ${new_balance:.2f}"
+            self._balance_var.set(label_text)
+
+            self._result_label.config(
+                text=f"Deposit Successful: ${amount:.2f} to {account}", fg="green")
 
         except ValueError:
             self._result_label.config(text="Invalid input! Enter a number.", fg="red")
