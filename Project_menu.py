@@ -125,22 +125,32 @@ class WithdrawalDialog(BaseDialog):
     def __init__(self, parent, user_id, balance_var):
         self._user_id = user_id
         self._balance_var = balance_var
-        super().__init__(parent, "Withdraw", bg_color="gray")
+        super().__init__(parent, "Withdraw", bg_color="white")
 
     def _setup_ui(self):
-        tk.Label(self, text="Withdraw", font=("Times New Roman", 20), bg="gray", fg="white").pack(pady=10)
-        tk.Label(self, text="Enter withdrawal amount:", font=("Times New Roman", 14), bg="gray", fg="white").pack()
+        tk.Label(self,
+        text="Withdraw",
+        font=("Times New Roman", 14),
+        bg="red",
+        fg="white",
+        padx=10,
+        anchor="center",      # <--- center text inside label
+        justify="center"      # <--- if multiline, center each line
+    ).pack(fill='x', pady=(0, 0))  # <--- removes any space at the top
 
-        self._amount_entry = tk.Entry(self, font=("Times New Roman", 14))
+        
+        tk.Label(self, text="Enter withdrawal amount:", font=("Times New Roman", 14), bg="white", fg="black").pack()
+
+        self._amount_entry = tk.Entry(self, font=("Times New Roman", 14), justify="right")
         self._amount_entry.pack(pady=5)
 
-        self._result_label = tk.Label(self, text="", font=("Times New Roman", 12), bg="gray", fg="white")
+        self._result_label = tk.Label(self, text="", font=("Times New Roman", 12), bg="white", fg="white")
         self._result_label.pack(pady=5)
 
         tk.Button(self, text="Withdraw", command=self._process_withdrawal,
-                  bg="white", fg="black", width=15).pack(pady=5)
+                  bg="dark blue", fg="white", width=15).pack(pady=5)
         tk.Button(self, text="Close", command=self.destroy,
-                  bg="white", fg="black", width=15).pack(pady=20)
+                  bg="red", fg="white", width=15).pack(pady=20)
 
     def _process_withdrawal(self):
         amount = self._amount_entry.get().strip()
@@ -174,30 +184,51 @@ class DepositDialog(BaseDialog):
         self._user_id = user_id
         self._balance_var = balance_var
         self._balances = balances
-        super().__init__(parent, "Deposit", bg_color="gray")
+        super().__init__(parent, "Deposit", bg_color="white")
 
     def _setup_ui(self):
-        tk.Label(self, text="Please choose account", font=("Times New Roman", 20), bg="gray", fg="white").pack(pady=10)
-        tk.Label(self, text="Enter deposit amount:", font=("Times New Roman", 14), bg="gray", fg="white").pack()
+
+        tk.Label(self,
+        text="Deposit",
+        font=("Times New Roman", 14),
+        bg="light grey",
+        fg="grey",
+        padx=10,
+        anchor="center",      # <--- center text inside label
+        justify="center"      # <--- if multiline, center each line
+    ).pack(fill='x', pady=(0, 0))  # <--- removes any space at the top
+
+
+        tk.Label(self, text="Deposit To:", font=("Times New Roman", 14), bg="light gray", fg="black",anchor="w",padx=15, width=500).place(x=0, y=30)
+
+        tk.Label(self, text="Amount:", font = ("Times New Roman", 14), bg = "light gray", fg = "black",anchor="w",padx=15, width=500).place(x=0, y=60)
+
+        # Savings amount (right)
+        self._amount_entry = tk.Entry(self, font = ("Times New Roman", 12),justify='right', bg="light gray", fg="dark blue")
+        self._amount_entry.place(x=225, y=62)         
 
         #will give the user the choice to pick where to deposit their funds
         self._account_var = tk.StringVar(value="checking")
-        choices_frame = tk.Frame(self, bg ="gray")
-        tk.Radiobutton(choices_frame, text = "Checking",variable=self._account_var, value="checking", bg="gray", fg="white").pack(side="left",padx=10)
-        tk.Radiobutton(choices_frame, text="Savings", variable=self._account_var, value="savings", bg="gray", fg="white").pack(side="left",padx=10)
-        choices_frame.pack(pady=5)
+        choices_frame = tk.Frame(self, bg ="light gray")
+        tk.Radiobutton(choices_frame, text = "Checking",variable=self._account_var, value="checking", bg="light gray", fg="black").pack(side="left",padx=10)
+        tk.Radiobutton(choices_frame, text="Savings", variable=self._account_var, value="savings", bg="light gray", fg="black").pack(side="left",padx=10)
+        choices_frame.place(x=220, y=32)
 
 
-        self._amount_entry = tk.Entry(self, font=("Times New Roman", 14))
-        self._amount_entry.pack(pady=5)
+        #self._amount_entry = tk.Entry(self, font=("Times New Roman", 14))
+        #self._amount_entry.pack(pady=5)
 
-        self._result_label = tk.Label(self, text="", font=("Times New Roman", 12), bg="gray", fg="white")
-        self._result_label.pack(pady=5)
+        self._result_label = tk.Label(self, text="", font=("Times New Roman", 12), bg="white", fg="white")
+        self._result_label.place(x=90,y=90)
+
+        # filler label
+        tk.Label(self, text="Investment, insurace and annuity products:                                                                                                                 \n   Are not FDIC Insured\n   Are Not Bank Guaranteed\n   May Lose Value\n   Are Not Deposits\n   Are Not Insured by Any Governmental Agency\n   Are Not a Condition to Any Banking Service or Activity"
+                 , font = ("Times New Roman", 10), bg = "light gray", fg = "grey",justify="left",padx=15).place(x=0, y=115)
 
         tk.Button(self, text="Deposit", command=self._process_deposit,
-                  bg="white", fg="black", width=15).pack(pady=5)
+                  bg="dark blue", fg="white", width=15).place(x=160,y=250)
         tk.Button(self, text="Close", command=self.destroy,
-                  bg="white", fg="black", width=15).pack(pady=20)
+                  bg="white", fg="dark blue", width=15, relief="flat", borderwidth=0).place(x=20,y=250)
 
     def _process_deposit(self):
         #depending on the account the user picks
@@ -330,7 +361,7 @@ class TransferDialog(BaseDialog):
         tk.Button(self, text="Transfer", command=self._process_transfer,
                   bg="dark blue", fg="white", width=15).place(x=150,y=250)
         tk.Button(self, text="Close", command=self.destroy,
-                  bg="white", fg="black", width=15).place(x=10,y=250)
+                  bg="white", fg="dark blue", width=15, relief="flat",borderwidth=0).place(x=10,y=250)
     
     #this will calculate and enter the amount that is stored into the savings account. 
     def _process_transfer(self):
