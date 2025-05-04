@@ -237,22 +237,100 @@ class TransferDialog(BaseDialog):
         self._checking_var = checking_var
         self._savings_var = savings_var
     
-        super().__init__(parent, "Transfer to Savings", bg_color="gray")
+        super().__init__(parent, "Transfer to Savings", bg_color="white")
     #adjusting the gui for the transfer button when pressed
     def _setup_ui(self):
-        tk.Label(self, text="Transfer to Savings", font = ("Time New Roman", 12), bg = "gray", fg = "white").pack(pady=10)
-        tk.Label(self, text="Enter the amount you want to transfer:", font = ("Times New Roman", 14), bg = "gray", fg = "white").pack()
+        tk.Label(self,
+        text="Transfer",
+        font=("Times New Roman", 14),
+        bg="light grey",
+        fg="grey",
+        padx=10,
+        anchor="center",      # <--- center text inside label
+        justify="center"      # <--- if multiline, center each line
+    ).pack(fill='x', pady=(0, 0))  # <--- removes any space at the top
+        
+        # "Checking" label (left)
+        checking = tk.Label(self, text="From\n", 
+                                font=("Times New Roman", 14),
+                                bg="lightgrey",
+                                fg="black",
+                                anchor="w",  # west (left) alignment
+                                width=15,
+                                padx=12)
+        checking.place(x=0, y=30)
 
-        self._amount_entry = tk.Entry(self, font = ("Times New Roman", 12))
-        self._amount_entry.pack(pady=5)
+        # Checking amount (right)
+        checkingA = tk.Label(self, text="My Checking\n", 
+                                font=("Times New Roman", 14),
+                                bg="lightgrey",
+                                fg="dark blue",
+                                anchor="e",  # east (right) alignment
+                                width=23,padx=15)
+        checkingA.place(x=145, y=30)
 
-        self._result_label = tk.Label(self, text="", font=("Times New Roman", 12), bg="gray", fg="white")
-        self._result_label.pack(pady=5)
+        # "Savings" label (left)
+        savings = tk.Label(self, text="To\n", 
+                                font=("Times New Roman", 14),
+                                bg="lightgrey",
+                                fg="black",
+                                anchor="w",
+                                width=15,
+                                padx=12)
+        savings.place(x=0, y=80)
+
+        # Savings amount (right)
+        savingsA = tk.Label(self, text="My Savings\n", 
+                                font=("Times New Roman", 14),
+                                bg="lightgrey",
+                                fg="dark blue",
+                                anchor="e",
+                                width=23,padx=15)
+        savingsA.place(x=145, y=80)        
+        
+        
+        
+        tk.Label(self, text="Amount", font = ("Times New Roman", 14), bg = "light gray", fg = "black",anchor="w",padx=15, width=500).place(x=0, y=140)
+
+        # Savings amount (right)
+        self._amount_entry = tk.Entry(self, font = ("Times New Roman", 12),justify='right', bg="light grey", fg="dark blue")
+        self._amount_entry.place(x=225, y=142)         
+        
+        # filler label
+        tk.Label(self, text="Investing involves risk. There is alwaysthe potential of losing money when you\ninvest in securities. Asset allocation, diversification, and rebalancing do not ensure\na profit or protect against loss in declining markets."
+                 , font = ("Times New Roman", 8), bg = "light gray", fg = "grey",justify="left",padx=15).place(x=0, y=200)
+
+
+        # show balances
+        um=UserManager()
+        check, saving = um.get_balances(self._user_id)
+        tk.Label(self, text=f"Available balance ${check}", 
+                                font=("Times New Roman", 8),
+                                bg="lightgrey",
+                                fg="grey",
+                                anchor="e",  # east (right) alignment
+                                width=33).place(x=190, y=53)
+        tk.Label(self, text=f"Available balance ${saving}", 
+                                font=("Times New Roman", 8),
+                                bg="lightgrey",
+                                fg="grey",
+                                anchor="e",  # east (right) alignment
+                                width=33).place(x=190, y=103)
+
+
+        
+        #tk.Label(self, text="Amount", font = ("Times New Roman", 14), bg = "light gray", fg = "black").place(x=10,y=100)
+
+        #self._amount_entry = tk.Entry(self, font = ("Times New Roman", 12))
+        #self._amount_entry.pack(pady=5)
+
+        self._result_label = tk.Label(self, text="", font=("Times New Roman", 12), bg="white", fg="white")
+        self._result_label.place(x=10,y=170)
 
         tk.Button(self, text="Transfer", command=self._process_transfer,
-                  bg="white", fg="black", width=15).pack(pady=5)
+                  bg="dark blue", fg="white", width=15).place(x=150,y=250)
         tk.Button(self, text="Close", command=self.destroy,
-                  bg="white", fg="black", width=15).pack(pady=20)
+                  bg="white", fg="black", width=15).place(x=10,y=250)
     
     #this will calculate and enter the amount that is stored into the savings account. 
     def _process_transfer(self):
