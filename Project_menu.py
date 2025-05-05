@@ -28,8 +28,8 @@ class UserMenu(BaseDialog):
         divider = tk.Frame(self, bg="dark blue", height=2, width=360)
         divider.place(x=25, y=197)
 
-        self._balance_var_checking.set(f"Checking: ${self._balances[0]:.2f}")
-        self._balance_var_savings.set(f"Savings: ${self._balances[1]:.2f}")
+        self._balance_var_checking.set(f"${self._balances[0]:.2f}")
+        self._balance_var_savings.set(f"${self._balances[1]:.2f}")
 
         # "Checking" label (left)
         checkingLabel = tk.Label(self, text="My Checking\n", 
