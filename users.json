@@ -1,7 +1,7 @@
 {
     "gabriel3": {
         "password": "12345",
-        "checking": 100.0,
+        "checking": 450.0,
         "savings": 125.0
     },
     "ndeleon01": {
@@ -22,11 +22,6 @@
     "gabriel4": {
         "password": "123qwe",
         "checking": 0.0,
-        "savings": 0.0
-    },
-    "danic": {
-        "password": "1234",
-        "checking": 300.0,
         "savings": 0.0
     }
 }
