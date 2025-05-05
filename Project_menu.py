@@ -112,7 +112,7 @@ class UserMenu(BaseDialog):
         withdrawal_dialog.grab_set()
 
     def _handle_deposit(self):
-        deposit_dialog = DepositDialog(self, self._user_id, self._balances, self._balance_var_checking)
+        deposit_dialog = DepositDialog(self, self._user_id, self._balances, self._balance_var_checking, self._balance_var_savings)
         deposit_dialog.grab_set()
 
     def _handle_transfer(self):
@@ -183,9 +183,10 @@ class WithdrawalDialog(BaseDialog):
 
 
 class DepositDialog(BaseDialog):
-    def __init__(self, parent, user_id, balances, balance_var):
+    def __init__(self, parent, user_id, balances, checking_var, savings_var):
         self._user_id = user_id
-        self._balance_var = balance_var
+        self._checking_var = checking_var
+        self._savings_var = savings_var 
         self._balances = balances
         super().__init__(parent, "Deposit", bg_color="white")
 
@@ -251,10 +252,10 @@ class DepositDialog(BaseDialog):
             #to refresh the display
             checking, savings = user_manager.get_balances(self._user_id)
 
-            new_balance = checking if account == "checking" else savings
-            #label_text = (f"{account.capitalize()}: ${new_balance:.2f}")
-            self._balance_var.set(f"${new_balance:.2f}")
-
+            if account == "checking":
+                self._checking_var.set(f"${checking:.2f}")
+            else:
+                self._savings_var.set(f"${savings:.2f}")
 
             self._result_label.config(
                 text=f"Deposit Successful: ${amount:.2f} to {account}", fg="green")
