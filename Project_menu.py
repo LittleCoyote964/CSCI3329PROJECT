@@ -175,7 +175,7 @@ class WithdrawalDialog(BaseDialog):
                 return
 
             new_balance = user_manager.get_balances(self._user_id)[0]
-            self._balance_var.set(f"Checking: ${new_balance:.2f}")
+            self._balance_var.set(f"${new_balance:.2f}")
             self._result_label.config(text=f"Withdrawal Successful: ${amount:.2f}", fg="green")
 
         except ValueError:
@@ -253,9 +253,7 @@ class DepositDialog(BaseDialog):
 
             new_balance = checking if account == "checking" else savings
             #label_text = (f"{account.capitalize()}: ${new_balance:.2f}")
-            self._balance_var.set(
-                f"{account.capitalize()}: ${new_balance:.2f}"
-            )
+            self._balance_var.set(f"${new_balance:.2f}")
 
 
             self._result_label.config(
@@ -389,8 +387,8 @@ class TransferDialog(BaseDialog):
                 self._result_label.config(text="Transfer failed!", fg = "red")
             
             check, saving = um.get_balances(self._user_id)
-            self._checking_var.set(f"Checking: ${check: .2f}")
-            self._savings_var.set(f"Savings: ${saving: .2f}")
+            self._checking_var.set(f"${check: .2f}")
+            self._savings_var.set(f"${saving: .2f}")
 
             self._result_label.config(text = f"Transferred ${amount: .2f}", fg = "green")
 
