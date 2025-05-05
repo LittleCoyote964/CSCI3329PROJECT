@@ -1,8 +1,8 @@
 {
     "gabriel3": {
         "password": "12345",
-        "checking": 450.0,
-        "savings": 125.0
+        "checking": 270.0,
+        "savings": 1875.0
     },
     "ndeleon01": {
         "password": "1234",
@@ -22,6 +22,11 @@
     "gabriel4": {
         "password": "123qwe",
         "checking": 0.0,
+        "savings": 0.0
+    },
+    "test": {
+        "password": "123",
+        "checking": 100.0,
         "savings": 0.0
     }
 }

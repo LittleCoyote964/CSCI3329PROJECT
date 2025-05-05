@@ -28,6 +28,9 @@ class UserMenu(BaseDialog):
         divider = tk.Frame(self, bg="dark blue", height=2, width=360)
         divider.place(x=25, y=197)
 
+        self._balance_var_checking.set(f"Checking: ${self._balances[0]:.2f}")
+        self._balance_var_savings.set(f"Savings: ${self._balances[1]:.2f}")
+
         # "Checking" label (left)
         checkingLabel = tk.Label(self, text="My Checking\n", 
                                 font=("Times New Roman", 15),
@@ -39,7 +42,7 @@ class UserMenu(BaseDialog):
         checkingLabel.place(x=25, y=200)
 
         # Checking amount (right)
-        checkingAmount = tk.Label(self, text=f"${self._balances[0]:.2f}\n", 
+        checkingAmount = tk.Label(self, textvariable=self._balance_var_checking, 
                                 font=("Times New Roman", 15),
                                 bg="lightgrey",
                                 fg="dark blue",
@@ -58,7 +61,7 @@ class UserMenu(BaseDialog):
         savingsLabel.place(x=25, y=260)
 
         # Savings amount (right)
-        savingsAmount = tk.Label(self, text=f"${self._balances[1]:.2f}\n", 
+        savingsAmount = tk.Label(self, textvariable=self._balance_var_savings, 
                                 font=("Times New Roman", 15),
                                 bg="lightgrey",
                                 fg="dark blue",
