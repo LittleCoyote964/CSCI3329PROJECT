@@ -35,14 +35,16 @@ class BankApp:
 
 
         # Load the image
-        logo_image = Image.open("logo.png")  
-        logo_image = logo_image.resize((250, 120))  # Resize as needed
+        logo_image = Image.open("logo1.png")  
+        logo_image = logo_image.resize((80, 80))  # Resize as needed
         logo_photo = ImageTk.PhotoImage(logo_image)
 
         # Create label with image
         headerLabel = tk.Label(image=logo_photo, bg="white")
         headerLabel.image = logo_photo  # Keep a reference to avoid garbage collection
-        headerLabel.place(x=25, y=20)
+        headerLabel.place(x=10, y=30)
+
+        tk.Label(text="Bank of Project", font=("Times New Roman", 20), bg="white",fg="grey").place(x =100, y=50)
 
     # filler3 label
         filler3Label = tk.Label(
@@ -62,19 +64,19 @@ class BankApp:
 
         # filler2 label
         filler2Label = tk.Label(text="Log In", font=("Times New Roman", 15), bg="white",fg="grey")      # <-- little padding from the left edge
-        filler2Label.place(x =300, y=70)
+        filler2Label.place(x =300, y=55)
 
     
 
         # Load the image for filler3
         filler_image = Image.open("filler.png")  
-        filler_image = filler_image.resize((350, 250))  # Resize as needed
+        filler_image = filler_image.resize((350, 350))  # Resize as needed
         filler_photo = ImageTk.PhotoImage(filler_image)
 
         # Create label with image
         fillerLabel = tk.Label( image=filler_photo, bg="white")
         fillerLabel.image = filler_photo  # Keep a reference to avoid garbage collection
-        fillerLabel.place(x=255, y=150)
+        fillerLabel.place(x=245, y=150)
 
 
 

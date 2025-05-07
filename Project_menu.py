@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from PIL import Image, ImageTk
 from base_dialog import BaseDialog
 from user_manager import UserManager
 
@@ -84,7 +85,17 @@ class UserMenu(BaseDialog):
         tk.Label(self, text="BANK OF AMERICA",font=("Calibri",13,"bold"),bg="red",fg="white", anchor="w", padx=10,pady=14).pack(fill='x', pady=(0, 0))
 
         # filler
-        tk.Label(self, text="Online Banking",font=("Times New Roman",13),bg="red",fg="white").place(x=200,y=15)
+        tk.Label(self, text="Online Banking",font=("Times New Roman",13),bg="red",fg="white").place(x=210,y=15)
+
+        # Load the image
+        logo_image = Image.open("logo1.png")  
+        logo_image = logo_image.resize((49, 49))  # Resize as needed
+        logo_photo = ImageTk.PhotoImage(logo_image)
+
+        # Create label with image
+        headerLabel = tk.Label(self,image=logo_photo, bg="red")
+        headerLabel.image = logo_photo  # Keep a reference to avoid garbage collection
+        headerLabel.place(x=150, y=0)
 
         # filler2
         tk.Label(self, text="Update profile  |  Security Center",font=("Times New Roman",10),bg="white",fg="blue").place(x=150,y=115)
