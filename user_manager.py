@@ -61,6 +61,11 @@ class UserManager:
     def update_balance(self, username: str, account_type: str, amount: float) -> bool:
         if username not in self._users or account_type not in ["checking", "savings"]:
             return False
+        
+        current_balance = self._users[username][account_type]
+        
+        if current_balance + amount < 0:
+            return False
 
         self._users[username][account_type] += amount
         self._save_users()
