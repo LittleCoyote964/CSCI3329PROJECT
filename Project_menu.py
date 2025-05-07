@@ -85,7 +85,7 @@ class UserMenu(BaseDialog):
         tk.Button(self, text="Transfer",font=("Times New Roman", 13), width=17, height=2, bg="light grey", fg="black",
                   command=self._handle_transfer).place(x=150, y=50)
         # top border
-        tk.Label(self, text="BANK OF AMERICA",font=("Calibri",13,"bold"),bg="red",fg="white", anchor="w", padx=10,pady=14).pack(fill='x', pady=(0, 0))
+        tk.Label(self, text="BANK OF PROJECT",font=("Calibri",13,"bold"),bg="red",fg="white", anchor="w", padx=10,pady=14).pack(fill='x', pady=(0, 0))
 
         # filler
         tk.Label(self, text="Online Banking",font=("Times New Roman",13),bg="red",fg="white").place(x=210,y=15)
