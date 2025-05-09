@@ -6,8 +6,8 @@
     },
     "ndeleon01": {
         "password": "1234",
-        "checking": 14521.0,
-        "savings": 2331.0
+        "checking": 14519.0,
+        "savings": 202333.0
     },
     "kgonz": {
         "password": "123qwe",
@@ -33,5 +33,10 @@
         "password": "test",
         "checking": 0.0,
         "savings": 0.0
+    },
+    "testuser": {
+        "password": "11111",
+        "checking": 910.0,
+        "savings": 3050.0
     }
 }
